@@ -1,0 +1,41 @@
+# depslib dependency file v1.0
+1711460246 source:d:\ltnc\gamedemo\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	"def.h"
+	"graphics.h"
+	"game.h"
+
+1711438444 d:\ltnc\gamedemo\def.h
+
+1711438387 d:\ltnc\gamedemo\graphics.h
+	"def.h"
+	<bits/stdc++.h>
+	<SDL_image.h>
+	<SDL.h>
+	"game.h"
+
+1711460181 d:\ltnc\gamedemo\game.h
+	"graphics.h"
+
+1711460246 source:d:\ltnc\gamedemo2\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	"def.h"
+	"graphics.h"
+	"game.h"
+
+1711438444 d:\ltnc\gamedemo2\def.h
+
+1711438387 d:\ltnc\gamedemo2\graphics.h
+	"def.h"
+	<bits/stdc++.h>
+	<SDL_image.h>
+	<SDL.h>
+	"game.h"
+
+1711460181 d:\ltnc\gamedemo2\game.h
+	"graphics.h"
+
