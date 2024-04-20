@@ -32,26 +32,36 @@ int main(int argc, char* argv[])
     vector<vector<int>> Camera2 = loadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
     vector<vector<int>> CamNow = Camera1;
 
+    //Khoitaonhanvat
     SDL_Texture* character= graphics.loadTexture(ROBBER_SPRITE_FILE);
     Sprite Robber;
     Robber.init(character, ROBBER_FRAMES, ROBBER_CLIPS);
-
-
     Mouse mouse;
     mouse.x = SCREEN_WIDTH / 2 ;
     mouse.y = SCREEN_HEIGHT / 2;
 
-    bool quit = false;
-    SDL_Event event;
 
+    //KhoitaoObjects
     vector<WALL> walls = WallInit();
     vector<OBJECTS> objects= ObjectsInit();
     vector<CAMERASCAN> camerascan = CamScanInit();
 
+    //Thoigiandoikhunghinh
     Uint32 prevTicks = SDL_GetTicks();
     Uint32 prevTicks2 = SDL_GetTicks();
 
+    //bool các thứ
+    bool camnow(1);
+    bool quit = false;
+    SDL_Event event;
+    bool menu= false;
+
     while (!quit) {
+        //Lam menu
+        while (menu){
+            SDL_RenderClear(graphics.renderer);
+        }
+
         SDL_RenderClear(graphics.renderer);
         graphics.drawTileMap(BackGround, tilesetImage);
 
@@ -90,9 +100,9 @@ int main(int argc, char* argv[])
         SDL_SetTextureAlphaMod(tilesetImage, 255);
 
         //Vẽ Camera
-        graphics.drawCamera(Camera1, Camera2, CamNow, prevTicks2, tilesetImage);
+        graphics.drawCamera(Camera1, Camera2, CamNow, prevTicks2, tilesetImage, camnow);
         //CheckCamera
-
+        CheckCollisionCamera(mouse, camerascan, camnow);
 
         graphics.presentScene();
         SDL_Delay(10);

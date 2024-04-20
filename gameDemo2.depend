@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1713622876 source:d:\ltnc\gamedemo2\main.cpp
+1713627346 source:d:\ltnc\gamedemo2\main.cpp
 	"def.h"
 	"graphics.h"
 	"game.h"
@@ -11,11 +11,11 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1713620694 d:\ltnc\gamedemo2\graphics.h
+1713623897 d:\ltnc\gamedemo2\graphics.h
 	"def.h"
 	"game.h"
 
-1713622944 d:\ltnc\gamedemo2\game.h
+1713626231 d:\ltnc\gamedemo2\game.h
 	"graphics.h"
 	"Objects.h"
 	"Interact.h"

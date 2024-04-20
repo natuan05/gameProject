@@ -103,7 +103,7 @@ void CheckBorder (Mouse &mouse){
 
 }
 
-int Collision1(Mouse &mouse, const WALL wall){
+int Collision1(const Mouse &mouse, const WALL wall){
     if (mouse.x + 32 > wall.x && mouse.x + 32 < wall.x + 5 && mouse.y + 32 > wall.y && mouse.y + 32 < wall.y + wall.h) return 1;
     if (mouse.x < wall.x + wall.w && mouse.x > wall.x +wall.w -5 && mouse.y + 32 > wall.y && mouse.y + 32< wall.y + wall.h) return 2;
     if (mouse.x + 32> wall.x && mouse.x< wall.x + wall.w && mouse.y + 32 > wall.y && mouse.y +32 < wall.y + 5) return 3;
@@ -112,7 +112,7 @@ int Collision1(Mouse &mouse, const WALL wall){
 
 }
 
-int Collision2(Mouse &mouse, const OBJECTS &ob){
+int Collision2(const Mouse &mouse, const OBJECTS &ob){
     if (mouse.x + 32 >= ob.x && mouse.x + 32 <= ob.x + 3 && mouse.y + 32 >= ob.y && mouse.y + 32 <= ob.y + ob.h) return 1;
     if (mouse.x <= ob.x + ob.w && mouse.x >= ob.x + ob.w - 3 && mouse.y + 32 >= ob.y && mouse.y + 32 <= ob.y + ob.h) return 2;
     if (mouse.x + 32 >= ob.x && mouse.x <= ob.x + ob.w && mouse.y + 32 >= ob.y && mouse.y + 32 <= ob.y + 3) return 3;
@@ -120,11 +120,12 @@ int Collision2(Mouse &mouse, const OBJECTS &ob){
     return 0;
 }
 
-int Collision3(Mouse &mouse, const OBJECTS &ob){
-    if (mouse.x + 32 >= ob.x && mouse.x + 32 <= ob.x + 10 && mouse.y + 32 >= ob.y && mouse.y + 32 <= ob.y + ob.h) return 1;
-    if (mouse.x <= ob.x + ob.w && mouse.x >= ob.x + ob.w - 10 && mouse.y + 32 >= ob.y && mouse.y + 32 <= ob.y + ob.h) return 2;
-    if (mouse.x + 32 >= ob.x && mouse.x <= ob.x + ob.w && mouse.y + 32 >= ob.y && mouse.y + 32 <= ob.y + 10) return 3;
-    if (mouse.x + 32 >= ob.x && mouse.x <= ob.x + ob.w && mouse.y + 32 <= ob.y + ob.h && mouse.y + 32 >= ob.y + ob.h - 10) return 4;
+int Collision3(const Mouse &mouse, const OBJECTS &ob){
+    if (mouse.x < ob.x + ob.w && mouse.x + 32 > ob.x && mouse.y < ob.y + ob.h && mouse.y + 32 > ob.y) return 1;
+    return 0;
+}
+int Collision3(const Mouse &mouse, const CAMERASCAN &cs){
+    if (mouse.x < cs.x + cs.w && mouse.x + 32 > cs.x && mouse.y < cs.y + cs.h && mouse.y + 32 > cs.y) return 1;
     return 0;
 }
 
@@ -162,15 +163,7 @@ void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* 
                 if (Collision3(mouse, ob)== 1){
                     CheckNameObject(ob, Keyy, ObjectsImage);
                 }
-                if (Collision3(mouse, ob)== 2){
-                    CheckNameObject(ob, Keyy, ObjectsImage);
-                }
-                if (Collision3(mouse, ob)== 3){
-                    CheckNameObject(ob, Keyy, ObjectsImage);
-                }
-                if (Collision3(mouse, ob)== 4){
-                    CheckNameObject(ob, Keyy, ObjectsImage);
-                }
+
             }
 
 
@@ -186,4 +179,29 @@ void CheckNameObject(OBJECTS &ob, const Uint8* Key, vector<vector<int>> &Objects
 
 }
 
+void CheckCollisionCamera(Mouse &mouse, const vector<CAMERASCAN> &camerascan, const bool &camnow){
+    if (camnow){
+        for (auto cs : camerascan){
+            if (Collision3(mouse, cs)){
+                if (cs.name == "CamScan1_1") cerr << "nguyhiem";
+                if (cs.name == "CamScan2_1") cerr << "nguyhiem";
+                if (cs.name == "CamScan3_1") cerr << "nguyhiem";
+                if (cs.name == "CamScan4_1") cerr << "nguyhiem";
+
+            }
+
+        }
+    }else{
+        for (auto cs : camerascan){
+            if (Collision3(mouse, cs)){
+                if (cs.name == "CamScan1_2") cerr << "nguyhiem";
+                if (cs.name == "CamScan2_2") cerr << "nguyhiem";
+                if (cs.name == "CamScan3_2") cerr << "nguyhiem";
+                if (cs.name == "CamScan4_2") cerr << "nguyhiem";
+
+            }
+
+        }
+    }
+}
 #endif // GAME_H
