@@ -33,9 +33,15 @@ int main(int argc, char* argv[])
     vector<vector<int>> CamNow = Camera1;
 
     //Khoitaonhanvat
-    SDL_Texture* character= graphics.loadTexture(ROBBER_SPRITE_FILE);
-    Sprite Robber;
-    Robber.init(character, ROBBER_FRAMES, ROBBER_CLIPS);
+    SDL_Texture* characterRun= graphics.loadTexture(ROBBERRUN_SPRITE_FILE);
+    Sprite RobberRun;
+    RobberRun.init(characterRun, ROBBERRUN_FRAMES, ROBBERRUN_CLIPS);
+
+    SDL_Texture* characterSlow= graphics.loadTexture(ROBBERSLOW_SPRITE_FILE);
+    Sprite RobberSlow;
+    RobberSlow.init(characterSlow, ROBBERSLOW_FRAMES, ROBBERSLOW_CLIPS);
+
+
     Mouse mouse;
     mouse.x = SCREEN_WIDTH / 2 ;
     mouse.y = SCREEN_HEIGHT / 2;
@@ -49,12 +55,13 @@ int main(int argc, char* argv[])
     //Thoigiandoikhunghinh
     Uint32 prevTicks = SDL_GetTicks();
     Uint32 prevTicks2 = SDL_GetTicks();
+    Uint32 prevTicks3 = SDL_GetTicks();
 
     //bool các thứ
     bool camnow(1);
     bool quit = false;
-    SDL_Event event;
     bool menu= false;
+    SDL_Event event;
 
     while (!quit) {
         //Lam menu
@@ -77,11 +84,19 @@ int main(int argc, char* argv[])
 
         //chuyển frame theo thời gian chạy;
         if (mouse.isMoving()) {
-            Robber.tick(prevTicks);
+            RobberRun.tick(prevTicks3);
+            RobberSlow.tick(prevTicks);
         }
 
         bool goR= (mouse.dx >= 0);
 
+        const Uint8* KeySlow = SDL_GetKeyboardState(NULL);
+        if (KeySlow[SDL_SCANCODE_LSHIFT]){
+            mouse.dx /= 2;
+            mouse.dy /= 2;
+        }
+
+        //cập nhật toạ độ
         mouse.move();
 
         //CheckCollision
@@ -92,7 +107,11 @@ int main(int argc, char* argv[])
         CheckCollisionObjects(mouse, objects, Keyy, ObjectsImage);
 
         //Render character
-        graphics.render(mouse.x, mouse.y, Robber, goR);
+        if (KeySlow[SDL_SCANCODE_LSHIFT]){
+            graphics.render(mouse.x, mouse.y, RobberSlow, goR);
+        }else{
+            graphics.render(mouse.x, mouse.y, RobberRun, goR);
+        }
 
         //Vẽ layer2 giảm độ mờ
         SDL_SetTextureAlphaMod(tilesetImage, 100);
