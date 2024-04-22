@@ -60,6 +60,22 @@ struct CAMERASCAN{
     }
 };
 
+struct VUNGCHELAP{
+    string name;
+    int x;
+    int y;
+    int w;
+    int h;
+    VUNGCHELAP(string _name, int _x, int _y, int _w, int _h){
+        name = _name;
+        x= _x;
+        y= _y;
+        w= _w;
+        h= _h;
+    }
+};
+
+
 vector <WALL> WallInit(){
     vector <WALL> walls;
     walls.emplace_back(640, 416, 32, 288);
@@ -87,10 +103,10 @@ vector <WALL> WallInit(){
 
 vector<OBJECTS> ObjectsInit(){
     vector<OBJECTS> ob;
-    ob.emplace_back("singlesofa1", 200, 3, 716.25, 224, 39.25, 32);
-    ob.emplace_back("singlesofa2", 200, 3, 717, 129, 38, 32);
-    ob.emplace_back("doublesofa", 0, 0, 672.25, 160, 31.75, 64);
-    ob.emplace_back("table", 0, 0, 718, 170, 33, 43);
+    ob.emplace_back("singlesofa1", 200, 3, 717, 237, 38, 19);
+    ob.emplace_back("singlesofa2", 200, 3, 717, 142, 38, 18);
+    ob.emplace_back("doublesofa", 0, 0, 672.25, 173, 31.75, 50.73);
+    ob.emplace_back("table", 0, 0, 720, 179, 32, 34);
     ob.emplace_back("fireplace", 0, 0, 768, 96, 64, 32);
     ob.emplace_back("clock", 0, 0, 672, 96, 32, 32);
     ob.emplace_back("TableTv", 0, 0, 832, 160, 27, 64);
@@ -111,5 +127,16 @@ vector<CAMERASCAN> CamScanInit(){
     return CS;
 
 }
+
+vector<VUNGCHELAP> VCLInit(){
+    vector<VUNGCHELAP> vcl;
+    vcl.emplace_back("doublesofa", 672, 160, 32, 14);
+    vcl.emplace_back("table", 720, 171, 32, 9);
+    vcl.emplace_back("singlesofa2", 717, 129, 38, 14);
+    vcl.emplace_back("singlesofa1", 717, 227, 38, 11);
+
+    return vcl;
+}
+
 #endif
 

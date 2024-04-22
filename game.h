@@ -4,13 +4,14 @@
 
 #define INITIAL_SPEED 1.5
 
-#include "graphics.h"
 #include "Objects.h"
 #include "Interact.h"
+#include "graphics.h"
 
 void CheckNameObject(OBJECTS &ob, const Uint8* Key,vector<vector<int>> &ObjectsImage);
 
 struct Mouse {
+
     double x, y;
     double dx = 0, dy = 0;
     double speed = INITIAL_SPEED;
@@ -102,7 +103,7 @@ void CheckBorder (Mouse &mouse){
     }
 
 }
-
+//Kiem tra va cham ngoai
 int Collision1(const Mouse &mouse, const WALL wall){
     if (mouse.x + 32 > wall.x && mouse.x + 32 < wall.x + 5 && mouse.y + 32 > wall.y && mouse.y + 32 < wall.y + wall.h) return 1;
     if (mouse.x < wall.x + wall.w && mouse.x > wall.x +wall.w -5 && mouse.y + 32 > wall.y && mouse.y + 32< wall.y + wall.h) return 2;
@@ -111,7 +112,6 @@ int Collision1(const Mouse &mouse, const WALL wall){
     return 0;
 
 }
-
 int Collision2(const Mouse &mouse, const OBJECTS &ob){
     if (mouse.x + 32 >= ob.x && mouse.x + 32 <= ob.x + 3 && mouse.y + 32 >= ob.y && mouse.y + 32 <= ob.y + ob.h) return 1;
     if (mouse.x <= ob.x + ob.w && mouse.x >= ob.x + ob.w - 3 && mouse.y + 32 >= ob.y && mouse.y + 32 <= ob.y + ob.h) return 2;
@@ -120,12 +120,17 @@ int Collision2(const Mouse &mouse, const OBJECTS &ob){
     return 0;
 }
 
+//Kiem tra ben trong
 int Collision3(const Mouse &mouse, const OBJECTS &ob){
     if (mouse.x < ob.x + ob.w && mouse.x + 32 > ob.x && mouse.y < ob.y + ob.h -32 && mouse.y + 32 > ob.y) return 1;
     return 0;
 }
 int Collision3(const Mouse &mouse, const CAMERASCAN &cs){
     if (mouse.x < cs.x + cs.w && mouse.x + 32 > cs.x && mouse.y < cs.y + cs.h -32&& mouse.y + 32 > cs.y) return 1;
+    return 0;
+}
+int Collision3(const Mouse &mouse, const VUNGCHELAP &vcl){
+    if (mouse.x < vcl.x + vcl.w && mouse.x + 32 > vcl.x && mouse.y < vcl.y + vcl.h -32&& mouse.y + 32 > vcl.y) return 1;
     return 0;
 }
 
@@ -171,6 +176,8 @@ void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* 
 
 }
 
+
+
 void CheckNameObject(OBJECTS &ob, const Uint8* Key, vector<vector<int>> &ObjectsImage){
     if(ob.name == "singlesofa1") InteractSingleSofa(ob, Key, ObjectsImage);
     if(ob.name == "singlesofa2") InteractSingleSofa(ob, Key, ObjectsImage);
@@ -178,6 +185,8 @@ void CheckNameObject(OBJECTS &ob, const Uint8* Key, vector<vector<int>> &Objects
     if(ob.name == "clock") InteractClock(ob, Key, ObjectsImage);
 
 }
+
+
 
 void CheckCollisionCamera(Mouse &mouse, const vector<CAMERASCAN> &camerascan, const bool &camnow){
     if (camnow){
@@ -204,4 +213,19 @@ void CheckCollisionCamera(Mouse &mouse, const vector<CAMERASCAN> &camerascan, co
         }
     }
 }
+
+void CheckNameVCL(const VUNGCHELAP vcl, Graphics &graphics, const vector<vector<int>> &ObjectsImage, SDL_Texture* tilesetImage){
+    if(vcl.name == "singlesofa1") VCL2(vcl, graphics, ObjectsImage, tilesetImage);
+    if(vcl.name == "singlesofa2") VCL2(vcl, graphics, ObjectsImage, tilesetImage);
+    if(vcl.name == "table") VCL2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           (vcl, graphics, ObjectsImage, tilesetImage);
+    if(vcl.name == "doublesofa") VCL1(vcl, graphics, ObjectsImage, tilesetImage);
+}
+void CheckCollisionObjectsToRender(const Mouse &mouse, const vector<VUNGCHELAP> vungchelap,  Graphics &graphics, const vector<vector<int>> &ObjectsImage, SDL_Texture* tilesetImage){
+    for (auto vcl : vungchelap){
+        if (Collision3(mouse, vcl)) CheckNameVCL(vcl, graphics, ObjectsImage, tilesetImage );
+    }
+
+}
+
+
 #endif // GAME_H

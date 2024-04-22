@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 void waitUntilKeyPressed()
 {
     SDL_Event e;
@@ -27,7 +26,9 @@ int main(int argc, char* argv[])
     vector<vector<int>> BackGround = loadTileMapFromCSV("Map\\gameDemo2_BackGround.csv");
     vector<vector<int>> Layer2 = loadTileMapFromCSV("Map\\gameDemo2_Layer2.csv");
     vector<vector<int>> ObjectsImage = loadTileMapFromCSV("Map\\gameDemo2_Object.csv");
-    initObjectsImage2(ObjectsImage);
+    vector<vector<int>> ObjectsImage2 = loadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
+
+    initObjectsImageCopy(ObjectsImage);
     vector<vector<int>> Camera1 = loadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
     vector<vector<int>> Camera2 = loadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
     vector<vector<int>> CamNow = Camera1;
@@ -41,7 +42,6 @@ int main(int argc, char* argv[])
     Sprite RobberSlow;
     RobberSlow.init(characterSlow, ROBBERSLOW_FRAMES, ROBBERSLOW_CLIPS);
 
-
     Mouse mouse;
     mouse.x = SCREEN_WIDTH / 2 ;
     mouse.y = SCREEN_HEIGHT / 2;
@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
     vector<WALL> walls = WallInit();
     vector<OBJECTS> objects= ObjectsInit();
     vector<CAMERASCAN> camerascan = CamScanInit();
+    vector<VUNGCHELAP> vungchelap = VCLInit();
 
     //Thoigiandoikhunghinh
     Uint32 prevTicks = SDL_GetTicks();
@@ -63,6 +64,7 @@ int main(int argc, char* argv[])
     bool menu= false;
     SDL_Event event;
 
+
     while (!quit) {
         //Lam menu
         while (menu){
@@ -72,7 +74,9 @@ int main(int argc, char* argv[])
         SDL_RenderClear(graphics.renderer);
         graphics.drawTileMap(BackGround, tilesetImage);
 
+        //VeObjects
         graphics.drawTileMap(ObjectsImage, tilesetImage);
+        graphics.drawTileMap(ObjectsImage2, tilesetImage);
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) quit = true;
@@ -107,11 +111,16 @@ int main(int argc, char* argv[])
         CheckCollisionObjects(mouse, objects, Keyy, ObjectsImage);
 
         //Render character
+
         if (KeySlow[SDL_SCANCODE_LSHIFT]){
             graphics.render(mouse.x, mouse.y, RobberSlow, goR);
         }else{
             graphics.render(mouse.x, mouse.y, RobberRun, goR);
         }
+
+        //CheckVCL
+        CheckCollisionObjectsToRender(mouse, vungchelap, graphics, ObjectsImage, tilesetImage);
+
 
         //Vẽ layer2 giảm độ mờ
         SDL_SetTextureAlphaMod(tilesetImage, 100);
@@ -128,7 +137,6 @@ int main(int argc, char* argv[])
     }
 
     graphics.quit();
-
     return 0;
 
 }

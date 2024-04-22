@@ -3,7 +3,6 @@
 
 
 #include "def.h"
-#include "graphics.h"
 #include "game.h"
 
 using namespace std;
