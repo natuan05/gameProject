@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1713838931 source:d:\ltnc\gamedemo2\main.cpp
+1713863065 source:d:\ltnc\gamedemo2\main.cpp
 	"def.h"
 	"graphics.h"
 	"game.h"
@@ -15,7 +15,7 @@
 1713838880 d:\ltnc\gamedemo2\graphics.h
 	"def.h"
 
-1713838889 d:\ltnc\gamedemo2\game.h
+1713862578 d:\ltnc\gamedemo2\game.h
 	"Objects.h"
 	"Interact.h"
 	"graphics.h"
@@ -24,7 +24,7 @@
 	"def.h"
 	"game.h"
 
-1713837957 d:\ltnc\gamedemo2\objects.h
+1713862904 d:\ltnc\gamedemo2\objects.h
 	"def.h"
 
 1713778066 d:\ltnc\gamedemo2\interact.h
@@ -32,6 +32,6 @@
 	"Map.h"
 	"graphics.h"
 
-1713838190 d:\ltnc\gamedemo2\dog.h
+1713860667 d:\ltnc\gamedemo2\dog.h
 	"def.h"
 

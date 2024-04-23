@@ -30,5 +30,9 @@ void updateDogPosition(Mouse &mouse, DOG &dog) {
     }
 }
 
+int Collision3(const Mouse &mouse, const DOG &dog){
+    if (mouse.x <= dog.x + dog.w && mouse.x + 32 >= dog.x && mouse.y <= dog.y + dog.h -32&& mouse.y + 32 >= dog.y) return 1;
+    return 0;
+}
 
 #endif // _DOG_H

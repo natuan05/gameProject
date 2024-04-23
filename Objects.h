@@ -148,7 +148,7 @@ void VUNGCHODUOIInit(VUNGCHODUOI &vcd){
     vcd.x = 320;
     vcd.y = 0;
     vcd.w = 320;
-    vcd.h = 736;
+    vcd.h = 737;
 }
 #endif
 

@@ -73,6 +73,7 @@ int main(int argc, char* argv[])
     bool menu= false;
     SDL_Event event;
     bool goR(0);
+    bool dogchase(0);
 
 
     while (!quit) {
@@ -133,14 +134,28 @@ int main(int argc, char* argv[])
         }
 
 
-        //CheckDog
-//        if (Collision3(mouse, vcd) && !KeySlow[SDL_SCANCODE_LSHIFT]){
-//            DogRun.tickdog(prevTicksForDogRun);
-//            updateDogPosition(mouse, dog);
-//            graphics.render(dog.x, dog.y, DogRun, goR);
-//        }else{
-//            graphics.render(dog.x, dog.y, DogRun, goR);
-//        }
+        //CheckDogChase
+        if (dogchase == 0){
+            if (Collision3(mouse, vcd)){
+                if (!KeySlow[SDL_SCANCODE_LSHIFT]){
+                    dogchase = 1;
+                }
+            }
+        }
+
+        if (dogchase){
+            if (Collision3(mouse, vcd)){
+                DogRun.tickdog(prevTicksForDogRun);
+                updateDogPosition(mouse, dog);
+                graphics.render(dog.x, dog.y, DogRun, goR);
+            }else{
+
+                graphics.render(dog.x, dog.y, DogRun, goR);
+            }
+        }
+
+
+
 
         //CheckVCL
         CheckCollisionObjectsToRender(mouse, vungchelap, graphics, ObjectsImage, tilesetImage);
