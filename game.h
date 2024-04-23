@@ -24,6 +24,7 @@ struct Mouse {
         dy= 0;
 
     }
+
     void turnNorth() {
         dy = -speed;
         dx = 0;
@@ -130,6 +131,10 @@ int Collision3(const Mouse &mouse, const CAMERASCAN &cs){
     return 0;
 }
 int Collision3(const Mouse &mouse, const VUNGCHELAP &vcl){
+    if (mouse.x < vcl.x + vcl.w && mouse.x + 32 > vcl.x && mouse.y < vcl.y + vcl.h -32&& mouse.y + 32 > vcl.y) return 1;
+    return 0;
+}
+int Collision3(const Mouse &mouse, const VUNGCHODUOI &vcl){
     if (mouse.x < vcl.x + vcl.w && mouse.x + 32 > vcl.x && mouse.y < vcl.y + vcl.h -32&& mouse.y + 32 > vcl.y) return 1;
     return 0;
 }

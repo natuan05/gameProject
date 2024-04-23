@@ -75,6 +75,12 @@ struct VUNGCHELAP{
     }
 };
 
+struct VUNGCHODUOI{
+    int x;
+    int y;
+    int w;
+    int h;
+};
 
 vector <WALL> WallInit(){
     vector <WALL> walls;
@@ -138,5 +144,11 @@ vector<VUNGCHELAP> VCLInit(){
     return vcl;
 }
 
+void VUNGCHODUOIInit(VUNGCHODUOI &vcd){
+    vcd.x = 320;
+    vcd.y = 0;
+    vcd.w = 320;
+    vcd.h = 736;
+}
 #endif
 

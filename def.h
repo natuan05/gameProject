@@ -31,8 +31,8 @@ const int ROBBERSLOW_CLIPS[][4] = {
 const int ROBBERSLOW_FRAMES = sizeof(ROBBERSLOW_CLIPS)/sizeof(int)/4;
 
 
-
 const double MS_PER_FRAME= 250;
+const double MS_PER_FRAME_DOG= 150;
 
 const int MAP_HEIGHT = 23;
 const int MAP_WIDTH = 40;
@@ -42,4 +42,20 @@ const int TILE_HEIGHT = 32;
 //const int TILESET_NUM_COLS = 9;
 
 const int MS_PER_CAMERA = 3000;
+
+
+
+//DOG
+const int INITIAL_DOGSPEED= 2.5;
+
+const char* DOGRUN_SPRITE_FILE = "img\\dogrun.png";
+const int DOGRUN_CLIPS[][4]={
+    {  0, 0, 48, 24}, // Frame 1
+    { 48, 0, 48, 24}, // Frame 2
+    { 96, 0, 48, 24}, // Frame 3
+    {144, 0, 48, 24}, // Frame 4
+    {192, 0, 48, 24},
+};
+const int DOGRUN_FRAMES = sizeof(DOGRUN_CLIPS)/sizeof(int)/4;
+
 #endif // _DEFS__H

@@ -31,6 +31,16 @@ struct Sprite {
             currentFrame = (currentFrame + 1) % clips.size();
             prevTicks = currentTicks;
         }
+    }
+
+    void tickdog(Uint32& prevTicks) {
+        Uint32 currentTicks = SDL_GetTicks();
+        Uint32 deltaTicks = currentTicks - prevTicks;
+
+        if (deltaTicks >= MS_PER_FRAME_DOG){
+            currentFrame = (currentFrame + 1) % clips.size();
+            prevTicks = currentTicks;
+        }
 
     }
 

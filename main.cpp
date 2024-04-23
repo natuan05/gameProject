@@ -3,7 +3,7 @@
 #include "game.h"
 #include "Map.h"
 #include "Objects.h"
-
+#include "dog.h"
 using namespace std;
 
 void waitUntilKeyPressed()
@@ -46,23 +46,33 @@ int main(int argc, char* argv[])
     mouse.x = SCREEN_WIDTH / 2 ;
     mouse.y = SCREEN_HEIGHT / 2;
 
+    //KhoiTaoConCho
+    DOG dog;
+    SDL_Texture* dogrun= graphics.loadTexture(DOGRUN_SPRITE_FILE);
+    Sprite DogRun;
+    DogRun.init(dogrun, DOGRUN_FRAMES, DOGRUN_CLIPS);
+
 
     //KhoitaoObjects
     vector<WALL> walls = WallInit();
     vector<OBJECTS> objects= ObjectsInit();
     vector<CAMERASCAN> camerascan = CamScanInit();
     vector<VUNGCHELAP> vungchelap = VCLInit();
+    VUNGCHODUOI vcd;
+    VUNGCHODUOIInit(vcd);
 
     //Thoigiandoikhunghinh
     Uint32 prevTicks = SDL_GetTicks();
     Uint32 prevTicks2 = SDL_GetTicks();
     Uint32 prevTicks3 = SDL_GetTicks();
+    Uint32 prevTicksForDogRun = SDL_GetTicks();
 
     //bool các thứ
     bool camnow(1);
     bool quit = false;
     bool menu= false;
     SDL_Event event;
+    bool goR(0);
 
 
     while (!quit) {
@@ -92,8 +102,6 @@ int main(int argc, char* argv[])
             RobberSlow.tick(prevTicks);
         }
 
-        bool goR= (mouse.dx >= 0);
-
         const Uint8* KeySlow = SDL_GetKeyboardState(NULL);
         if (KeySlow[SDL_SCANCODE_LSHIFT]){
             mouse.dx /= 2;
@@ -101,6 +109,12 @@ int main(int argc, char* argv[])
         }
 
         //cập nhật toạ độ
+        if (mouse.dx > 0){
+            goR = 1;
+        }else if ( mouse.dx < 0){
+            goR = 0;
+        }
+
         mouse.move();
 
         //CheckCollision
@@ -117,6 +131,16 @@ int main(int argc, char* argv[])
         }else{
             graphics.render(mouse.x, mouse.y, RobberRun, goR);
         }
+
+
+        //CheckDog
+//        if (Collision3(mouse, vcd) && !KeySlow[SDL_SCANCODE_LSHIFT]){
+//            DogRun.tickdog(prevTicksForDogRun);
+//            updateDogPosition(mouse, dog);
+//            graphics.render(dog.x, dog.y, DogRun, goR);
+//        }else{
+//            graphics.render(dog.x, dog.y, DogRun, goR);
+//        }
 
         //CheckVCL
         CheckCollisionObjectsToRender(mouse, vungchelap, graphics, ObjectsImage, tilesetImage);
