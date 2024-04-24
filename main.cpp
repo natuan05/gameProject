@@ -56,10 +56,10 @@ int main(int argc, char* argv[])
     //KhoitaoObjects
     vector<WALL> walls = WallInit();
     vector<OBJECTS> objects= ObjectsInit();
-    vector<CAMERASCAN> camerascan = CamScanInit();
-    vector<VUNGCHELAP> vungchelap = VCLInit();
-    VUNGCHODUOI vcd;
-    VUNGCHODUOIInit(vcd);
+    vector<ZONE> camerascan = CamScanInit();
+    vector<ZONE> vungchelap = VCLInit();
+    ZONE vcd("vungchoduoi", 320, 0, 320, 737);
+    vector<ZONE> escape = EscapeInit();
 
     //Thoigiandoikhunghinh
     Uint32 prevTicks = SDL_GetTicks();
@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
     bool DoggoR(0);
     bool menu(0);
 
+    Inventory Bag;
 
     while (!quit) {
         while (menu){

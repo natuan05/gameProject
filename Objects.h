@@ -43,7 +43,7 @@ struct OBJECTS{
 
 };
 
-struct CAMERASCAN{
+struct ZONE{
     string name;
 
     int x;
@@ -51,35 +51,13 @@ struct CAMERASCAN{
     int w;
     int h;
 
-    CAMERASCAN(string _name, int _x, int _y, int _w, int _h){
+    ZONE(string _name, int _x, int _y, int _w, int _h){
         name = _name;
         x= _x;
         y= _y;
         w= _w;
         h= _h;
     }
-};
-
-struct VUNGCHELAP{
-    string name;
-    int x;
-    int y;
-    int w;
-    int h;
-    VUNGCHELAP(string _name, int _x, int _y, int _w, int _h){
-        name = _name;
-        x= _x;
-        y= _y;
-        w= _w;
-        h= _h;
-    }
-};
-
-struct VUNGCHODUOI{
-    int x;
-    int y;
-    int w;
-    int h;
 };
 
 vector <WALL> WallInit(){
@@ -129,8 +107,8 @@ vector<OBJECTS> ObjectsInit(){
     return ob;
 }
 
-vector<CAMERASCAN> CamScanInit(){
-    vector<CAMERASCAN> CS;
+vector<ZONE> CamScanInit(){
+    vector<ZONE> CS;
     CS.emplace_back("CamScan4_1", 768, 288, 128, 128);
     CS.emplace_back("CamScan4_2", 768, 192, 128, 128);
     CS.emplace_back("CamScan3_2", 672, 544, 128, 128);
@@ -144,8 +122,8 @@ vector<CAMERASCAN> CamScanInit(){
 
 }
 
-vector<VUNGCHELAP> VCLInit(){
-    vector<VUNGCHELAP> vcl;
+vector<ZONE> VCLInit(){
+    vector<ZONE> vcl;
     vcl.emplace_back("doublesofa", 672, 160, 32, 14);
     vcl.emplace_back("table", 720, 171, 32, 9);
     vcl.emplace_back("singlesofa2", 717, 129, 38, 14);
@@ -154,18 +132,12 @@ vector<VUNGCHELAP> VCLInit(){
     return vcl;
 }
 
-vector <OBJECTS> EscapeInit(){
-    vector<OBJECTS> ei;
-    ei.emplace_back("car_trunk", 0, 0, 169, 157, 48, 16);
-    ei.emplace_back("Enter", 0, 0, 224, 64, 32, 32);
+vector <ZONE> EscapeInit(){
+    vector<ZONE> ei;
+    ei.emplace_back("car_trunk", 169, 157, 48, 16);
+    ei.emplace_back("Enter", 224, 64, 32, 32);
     return ei;
 }
 
-void VUNGCHODUOIInit(VUNGCHODUOI &vcd){
-    vcd.x = 320;
-    vcd.y = 0;
-    vcd.w = 320;
-    vcd.h = 737;
-}
 #endif
 
