@@ -5,6 +5,21 @@
 
 using namespace std;
 
+struct OBJECTSIMAGE{
+    vector<vector<int>> OI1;
+    vector<vector<int>> OI1CP;
+    vector<vector<int>> OI2;
+    vector<vector<int>> OI2CP;
+
+    void init(vector<vector<int>> _OI1, vector<vector<int>> _OI2){
+        OI1 = _OI1;
+        OI2 = _OI2;
+        OI1CP = OI1;
+        OI2CP = OI2;
+    }
+};
+
+
 struct WALL{
 
     int x;

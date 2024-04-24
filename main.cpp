@@ -28,10 +28,12 @@ int main(int argc, char* argv[])
 
     vector<vector<int>> BackGround = loadTileMapFromCSV("Map\\gameDemo2_BackGround.csv");
     vector<vector<int>> Layer2 = loadTileMapFromCSV("Map\\gameDemo2_Layer2.csv");
-    vector<vector<int>> ObjectsImage = loadTileMapFromCSV("Map\\gameDemo2_Object.csv");
-    vector<vector<int>> ObjectsImage2 = loadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
 
-    initObjectsImageCopy(ObjectsImage);
+    vector<vector<int>> ObjectsImage1 = loadTileMapFromCSV("Map\\gameDemo2_Object.csv");
+    vector<vector<int>> ObjectsImage2 = loadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
+    OBJECTSIMAGE fullObjectsImage;
+    fullObjectsImage.init(ObjectsImage1, ObjectsImage2);
+
     vector<vector<int>> Camera1 = loadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
     vector<vector<int>> Camera2 = loadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
     vector<vector<int>> CamNow = Camera1;
@@ -87,8 +89,8 @@ int main(int argc, char* argv[])
         graphics.drawTileMap(BackGround, tilesetImage);
 
         //VeObjects
-        graphics.drawTileMap(ObjectsImage, tilesetImage);
-        graphics.drawTileMap(ObjectsImage2, tilesetImage);
+        graphics.drawTileMap(fullObjectsImage.OI1, tilesetImage);
+        graphics.drawTileMap(fullObjectsImage.OI2, tilesetImage);
 
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) quit = true;
@@ -124,7 +126,7 @@ int main(int argc, char* argv[])
         CheckCollisionWall(mouse, walls);
 
         const Uint8* Keyy = SDL_GetKeyboardState(NULL);
-        CheckCollisionObjects(mouse, objects, Keyy, ObjectsImage);
+        CheckCollisionObjects(mouse, objects, Keyy, fullObjectsImage);
 
         //Render character
 
@@ -165,7 +167,7 @@ int main(int argc, char* argv[])
         }
 
         //CheckVCL
-        CheckCollisionObjectsToRender(mouse, vungchelap, graphics, ObjectsImage, tilesetImage);
+        CheckCollisionObjectsToRender(mouse, vungchelap, graphics, fullObjectsImage.OI1, tilesetImage);
 
 
         //Vẽ layer2 giảm độ mờ

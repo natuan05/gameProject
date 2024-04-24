@@ -8,7 +8,7 @@
 #include "graphics.h"
 #include "menu.h"
 
-void CheckNameObject(OBJECTS &ob, const Uint8* Key,vector<vector<int>> &ObjectsImage);
+void CheckNameObject(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage);
 
 struct Mouse {
 
@@ -186,29 +186,29 @@ void CheckCollisionWall(Mouse &mouse, const vector<WALL> &walls) {
     }
 }
 
-void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* Keyy, vector<vector<int>> &ObjectsImage){
+void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* Keyy, OBJECTSIMAGE &fullObjectsImage){
 
         for (auto &ob : objects){
             if (ob.exist){
                 if (Collision2(mouse, ob)== 1){
                     mouse.x = ob.x - 32;
-                    CheckNameObject(ob, Keyy, ObjectsImage);
+                    CheckNameObject(ob, Keyy, fullObjectsImage);
                 }
                 if (Collision2(mouse, ob)== 2){
                     mouse.x = ob.x + ob.w;
-                    CheckNameObject(ob, Keyy, ObjectsImage);
+                    CheckNameObject(ob, Keyy, fullObjectsImage);
                 }
                 if (Collision2(mouse, ob)== 3){
                     mouse.y = ob.y - 32;
-                    CheckNameObject(ob, Keyy, ObjectsImage);
+                    CheckNameObject(ob, Keyy, fullObjectsImage);
                 }
                 if (Collision2(mouse, ob)== 4){
                     mouse.y = ob.y + ob.h - 32;
-                    CheckNameObject(ob, Keyy, ObjectsImage);
+                    CheckNameObject(ob, Keyy, fullObjectsImage);
                 }
             }else{
                 if (Collision3(mouse, ob)== 1){
-                    CheckNameObject(ob, Keyy, ObjectsImage);
+                    CheckNameObject(ob, Keyy, fullObjectsImage);
                 }
 
             }
@@ -220,13 +220,13 @@ void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* 
 
 
 
-void CheckNameObject(OBJECTS &ob, const Uint8* Key, vector<vector<int>> &ObjectsImage){
-    if(ob.name == "singlesofa1") InteractX_X1(ob, Key, ObjectsImage);
-    if(ob.name == "singlesofa2") InteractX_X1(ob, Key, ObjectsImage);
-    if(ob.name == "doublesofa") InteractY_Y1(ob, Key, ObjectsImage);
-    if(ob.name == "clock") InteractY0_Y(ob, Key, ObjectsImage);
-    if(ob.name == "table") InteractXX1_YY1(ob, Key, ObjectsImage);
-
+void CheckNameObject(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage){
+    if(ob.name == "singlesofa1") InteractX_X1(ob, Key, fullObjectsImage);
+//    if(ob.name == "singlesofa2") InteractX_X1(ob, Key, fullObjectsImage);
+//    if(ob.name == "doublesofa") InteractY_Y1(ob, Key, fullObjectsImage);
+//    if(ob.name == "clock") InteractY0_Y(ob, Key, fullObjectsImage);
+//    if(ob.name == "table") InteractXX1_YY1(ob, Key, fullObjectsImage);
+//
 }
 
 
