@@ -124,6 +124,8 @@ vector<OBJECTS> ObjectsInit(){
     ob.emplace_back("pots1", 0, 0, 675, 304, 26, 12);
     ob.emplace_back("pots2", 0, 0, 867, 304, 26, 12);
     ob.emplace_back("kennel", 0, 0, 322, 465, 28, 15);
+    ob.emplace_back("truck", 0, 0, 160, 32, 64, 128);
+
     return ob;
 }
 
@@ -150,6 +152,13 @@ vector<VUNGCHELAP> VCLInit(){
     vcl.emplace_back("singlesofa1", 717, 227, 38, 11);
 
     return vcl;
+}
+
+vector <OBJECTS> EscapeInit(){
+    vector<OBJECTS> ei;
+    ei.emplace_back("car_trunk", 0, 0, 169, 157, 48, 16);
+    ei.emplace_back("Enter", 0, 0, 224, 64, 32, 32);
+    return ei;
 }
 
 void VUNGCHODUOIInit(VUNGCHODUOI &vcd){

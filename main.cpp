@@ -74,9 +74,14 @@ int main(int argc, char* argv[])
     bool goR(0);
     bool dogchase(0);
     bool DoggoR(0);
+    bool menu(0);
 
 
     while (!quit) {
+        while (menu){
+
+        }
+
         SDL_RenderClear(graphics.renderer);
         graphics.drawTileMap(BackGround, tilesetImage);
 
@@ -173,6 +178,7 @@ int main(int argc, char* argv[])
         CheckCollisionCamera(mouse, camerascan, camnow);
 
         graphics.presentScene();
+
         SDL_Delay(10);
     }
 

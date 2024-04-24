@@ -164,11 +164,11 @@ int Collision3(const Mouse &mouse, const OBJECTS &ob){
     return 0;
 }
 int Collision3(const Mouse &mouse, const CAMERASCAN &cs){
-    if (mouse.x < cs.x + cs.w && mouse.x + 32 > cs.x && mouse.y < cs.y + cs.h -32&& mouse.y + 32 > cs.y) return 1;
+    if (mouse.x <= cs.x + cs.w && mouse.x + 32 >= cs.x && mouse.y <= cs.y + cs.h -32&& mouse.y + 32 >= cs.y) return 1;
     return 0;
 }
 int Collision3(const Mouse &mouse, const VUNGCHELAP &vcl){
-    if (mouse.x < vcl.x + vcl.w && mouse.x + 32 > vcl.x && mouse.y < vcl.y + vcl.h -32&& mouse.y + 32 > vcl.y) return 1;
+    if (mouse.x <= vcl.x + vcl.w && mouse.x + 32 >= vcl.x && mouse.y <= vcl.y + vcl.h -32&& mouse.y + 32 >= vcl.y) return 1;
     return 0;
 }
 int Collision3(const Mouse &mouse, const VUNGCHODUOI &vcl){
