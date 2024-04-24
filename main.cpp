@@ -70,7 +70,6 @@ int main(int argc, char* argv[])
     //bool các thứ
     bool camnow(1);
     bool quit = false;
-    bool menu= false;
     SDL_Event event;
     bool goR(0);
     bool dogchase(0);
@@ -78,11 +77,6 @@ int main(int argc, char* argv[])
 
 
     while (!quit) {
-        //Lam menu
-        while (menu){
-            SDL_RenderClear(graphics.renderer);
-        }
-
         SDL_RenderClear(graphics.renderer);
         graphics.drawTileMap(BackGround, tilesetImage);
 
@@ -148,8 +142,17 @@ int main(int argc, char* argv[])
                 DogRun.tickdog(prevTicksForDogRun);
                 updateDogPosition(mouse, dog, DoggoR);
                 graphics.render(dog.x, dog.y, DogRun, DoggoR);
+
             }else{
+
                 graphics.renderTexture(dogimage, dog.x, dog.y);
+                if (Collision4(mouse, dog)){
+                    if (KeySlow[SDL_SCANCODE_LSHIFT]){
+                        graphics.render(mouse.x, mouse.y, RobberSlow, goR);
+                    }else{
+                        graphics.render(mouse.x, mouse.y, RobberRun, goR);
+                    }
+                }
             }
         }else{
             graphics.renderTexture(sleepdog, 322, 465);

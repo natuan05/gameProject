@@ -12,8 +12,8 @@ struct Mouse {
 
     double x=   SCREEN_WIDTH / 2 ;
     double y=  SCREEN_HEIGHT / 2;
-    double ox;
-    double oy;
+    double head_w= 32;
+    double head_h= 12;
 
     double dx = 0, dy = 0;
     double speed = INITIAL_SPEED;
@@ -25,8 +25,6 @@ struct Mouse {
         y += dy;
         dx = 0;
         dy= 0;
-        ox= x+ 16;
-        oy= y + 16;
     }
 
     void turnNorth() {
@@ -179,8 +177,14 @@ int Collision3(const Mouse &mouse, const VUNGCHODUOI &vcl){
 }
 int Collision3(const Mouse &mouse, const DOG &dog){
     if (mouse.x <= dog.x + dog.w && mouse.x + 32 >= dog.x && mouse.y <= dog.y + dog.h && mouse.y + 32 >= dog.y) return 1;
+    if (mouse.x <= dog.x + dog.w && mouse.x + mouse.head_w >= dog.x && mouse.y <= dog.y + dog.h && mouse.y + mouse.head_h >= dog.y) return 2;
     return 0;
 }
+int Collision4(const Mouse &mouse, const DOG &dog){
+    if (mouse.x <= dog.x + dog.w && mouse.x + mouse.head_w >= dog.x && mouse.y <= dog.y + dog.h && mouse.y + mouse.head_h >= dog.y) return 1;
+    return 0;
+}
+
 void CheckCollisionWall(Mouse &mouse, const vector<WALL> &walls) {
     for (const auto &wall : walls) {
         if (Collision1(mouse, wall) == 1) mouse.x = wall.x - 32;
