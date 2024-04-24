@@ -3,7 +3,7 @@
 #include "game.h"
 #include "Map.h"
 #include "Objects.h"
-#include "dog.h"
+
 using namespace std;
 
 void waitUntilKeyPressed()
@@ -23,6 +23,9 @@ int main(int argc, char* argv[])
     graphics.init();
     //Khởi tạo all image...
     SDL_Texture* tilesetImage= graphics.loadTexture("Map\\tilemap.png");
+    SDL_Texture* sleepdog = graphics.loadTexture("img\\sleepdog.png");
+    SDL_Texture* dogimage = graphics.loadTexture("img\\dog.png");
+
     vector<vector<int>> BackGround = loadTileMapFromCSV("Map\\gameDemo2_BackGround.csv");
     vector<vector<int>> Layer2 = loadTileMapFromCSV("Map\\gameDemo2_Layer2.csv");
     vector<vector<int>> ObjectsImage = loadTileMapFromCSV("Map\\gameDemo2_Object.csv");
@@ -43,9 +46,6 @@ int main(int argc, char* argv[])
     RobberSlow.init(characterSlow, ROBBERSLOW_FRAMES, ROBBERSLOW_CLIPS);
 
     Mouse mouse;
-    mouse.x = SCREEN_WIDTH / 2 ;
-    mouse.y = SCREEN_HEIGHT / 2;
-
     //KhoiTaoConCho
     DOG dog;
     SDL_Texture* dogrun= graphics.loadTexture(DOGRUN_SPRITE_FILE);
@@ -74,6 +74,7 @@ int main(int argc, char* argv[])
     SDL_Event event;
     bool goR(0);
     bool dogchase(0);
+    bool DoggoR(0);
 
 
     while (!quit) {
@@ -142,20 +143,17 @@ int main(int argc, char* argv[])
                 }
             }
         }
-
         if (dogchase){
-            if (Collision3(mouse, vcd)){
+            if (Collision3(mouse, vcd) && !Collision3(mouse, dog)){
                 DogRun.tickdog(prevTicksForDogRun);
-                updateDogPosition(mouse, dog);
-                graphics.render(dog.x, dog.y, DogRun, goR);
+                updateDogPosition(mouse, dog, DoggoR);
+                graphics.render(dog.x, dog.y, DogRun, DoggoR);
             }else{
-
-                graphics.render(dog.x, dog.y, DogRun, goR);
+                graphics.renderTexture(dogimage, dog.x, dog.y);
             }
+        }else{
+            graphics.renderTexture(sleepdog, 322, 465);
         }
-
-
-
 
         //CheckVCL
         CheckCollisionObjectsToRender(mouse, vungchelap, graphics, ObjectsImage, tilesetImage);

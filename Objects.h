@@ -116,6 +116,14 @@ vector<OBJECTS> ObjectsInit(){
     ob.emplace_back("fireplace", 0, 0, 768, 96, 64, 32);
     ob.emplace_back("clock", 0, 0, 672, 96, 32, 32);
     ob.emplace_back("TableTv", 0, 0, 832, 160, 27, 64);
+    ob.emplace_back("washstand1", 0, 0, 931, 448, 26.75, 15.25);
+    ob.emplace_back("washstand2", 0, 0, 899, 576, 26.75, 15.25);
+    ob.emplace_back("bathtub1", 0, 0, 864, 512, 64, 32);
+    ob.emplace_back("bathtub2", 0, 0, 896, 640, 64, 32);
+    ob.emplace_back("Table2", 0, 0, 864, 96, 32, 32);
+    ob.emplace_back("pots1", 0, 0, 675, 304, 26, 12);
+    ob.emplace_back("pots2", 0, 0, 867, 304, 26, 12);
+    ob.emplace_back("kennel", 0, 0, 322, 465, 28, 15);
     return ob;
 }
 

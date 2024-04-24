@@ -7,7 +7,6 @@
 
 using namespace std;
 
-// Hàm để tải tile map từ tệp CSV
 vector<vector<int>> loadTileMapFromCSV(const string& filePath) {
     vector<vector<int>> tileMap(MAP_HEIGHT, vector<int>(MAP_WIDTH, 0));
 

@@ -2,27 +2,31 @@
 #ifndef GAME_H
 #define GAME_H
 
-#define INITIAL_SPEED 1.5
 
 #include "Objects.h"
 #include "Interact.h"
 #include "graphics.h"
-
 void CheckNameObject(OBJECTS &ob, const Uint8* Key,vector<vector<int>> &ObjectsImage);
 
 struct Mouse {
 
-    double x, y;
+    double x=   SCREEN_WIDTH / 2 ;
+    double y=  SCREEN_HEIGHT / 2;
+    double ox;
+    double oy;
+
     double dx = 0, dy = 0;
     double speed = INITIAL_SPEED;
     double speed2 = (double)speed/(sqrt(2));
+
 
     void move() {
         x += dx;
         y += dy;
         dx = 0;
         dy= 0;
-
+        ox= x+ 16;
+        oy= y + 16;
     }
 
     void turnNorth() {
@@ -87,6 +91,41 @@ struct Mouse {
 
 
 };
+struct DOG{
+    double x = 322;
+    double y = 465;
+    int w = 48;
+    int h = 24;
+    double dx = 0, dy = 0;
+    double speed = INITIAL_DOGSPEED;
+
+
+};
+void updateDogPosition(Mouse &mouse, DOG &dog, bool &DoggoR) {
+    double distance = sqrt(pow(mouse.x - dog.x, 2) + pow(mouse.y - dog.y, 2));
+
+    if (distance > dog.speed) {
+        dog.dx= (mouse.x - dog.x ) / distance;
+        dog.dy = (mouse.y - dog.y ) / distance;
+
+        if (dog.dx > 0){
+            DoggoR = 1;
+        }else if (dog.dx < 0){
+            DoggoR = 0;
+        }
+
+        dog.x += dog.dx * dog.speed;
+        dog.y += dog.dy * dog.speed;
+
+    } else {
+        dog.x = mouse.x;
+        dog.y = mouse.y;
+    }
+}
+
+double pow(double x){
+    return x*x;
+}
 
 void CheckBorder (Mouse &mouse){
     if ( mouse.x < 0){
@@ -138,7 +177,10 @@ int Collision3(const Mouse &mouse, const VUNGCHODUOI &vcl){
     if (mouse.x < vcl.x + vcl.w && mouse.x + 32 > vcl.x && mouse.y < vcl.y + vcl.h -32&& mouse.y + 32 > vcl.y) return 1;
     return 0;
 }
-
+int Collision3(const Mouse &mouse, const DOG &dog){
+    if (mouse.x <= dog.x + dog.w && mouse.x + 32 >= dog.x && mouse.y <= dog.y + dog.h && mouse.y + 32 >= dog.y) return 1;
+    return 0;
+}
 void CheckCollisionWall(Mouse &mouse, const vector<WALL> &walls) {
     for (const auto &wall : walls) {
         if (Collision1(mouse, wall) == 1) mouse.x = wall.x - 32;
@@ -231,6 +273,7 @@ void CheckCollisionObjectsToRender(const Mouse &mouse, const vector<VUNGCHELAP> 
     }
 
 }
+
 
 
 #endif // GAME_H

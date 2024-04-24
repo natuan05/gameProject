@@ -4,6 +4,7 @@
 #include <bits/stdc++.h>
 #include <SDL.h>
 #include <SDL_image.h>
+const double INITIAL_SPEED = 2;
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 736;
@@ -46,7 +47,7 @@ const int MS_PER_CAMERA = 3000;
 
 
 //DOG
-const int INITIAL_DOGSPEED= 2.5;
+const int INITIAL_DOGSPEED= 2.3;
 
 const char* DOGRUN_SPRITE_FILE = "img\\dogrun.png";
 const int DOGRUN_CLIPS[][4]={
