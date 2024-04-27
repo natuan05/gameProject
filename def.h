@@ -4,7 +4,15 @@
 #include <bits/stdc++.h>
 #include <SDL.h>
 #include <SDL_image.h>
-const double INITIAL_SPEED = 2;
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
+
+//Image
+
+
+
+
+const double INITIAL_SPEED = 1.5;
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 736;

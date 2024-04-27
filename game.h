@@ -222,11 +222,11 @@ void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* 
 
 void CheckNameObject(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage){
     if(ob.name == "singlesofa1") InteractX_X1(ob, Key, fullObjectsImage);
-//    if(ob.name == "singlesofa2") InteractX_X1(ob, Key, fullObjectsImage);
-//    if(ob.name == "doublesofa") InteractY_Y1(ob, Key, fullObjectsImage);
-//    if(ob.name == "clock") InteractY0_Y(ob, Key, fullObjectsImage);
-//    if(ob.name == "table") InteractXX1_YY1(ob, Key, fullObjectsImage);
-//
+    if(ob.name == "singlesofa2") InteractX_X1(ob, Key, fullObjectsImage);
+    if(ob.name == "doublesofa") InteractY_Y1(ob, Key, fullObjectsImage);
+    if(ob.name == "clock") InteractY0_Y(ob, Key, fullObjectsImage);
+    if(ob.name == "table") InteractXX1_YY1(ob, Key, fullObjectsImage);
+
 }
 
 

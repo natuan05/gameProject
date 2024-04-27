@@ -36,7 +36,6 @@
 		<Unit filename="Map.h" />
 		<Unit filename="Objects.h" />
 		<Unit filename="def.h" />
-		<Unit filename="dog.h" />
 		<Unit filename="game.h" />
 		<Unit filename="graphics.h" />
 		<Unit filename="main.cpp" />

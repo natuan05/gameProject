@@ -6,12 +6,14 @@
 using namespace std;
 
 struct OBJECTSIMAGE{
+    SDL_Texture* tilesetImage;
     vector<vector<int>> OI1;
     vector<vector<int>> OI1CP;
     vector<vector<int>> OI2;
     vector<vector<int>> OI2CP;
 
-    void init(vector<vector<int>> _OI1, vector<vector<int>> _OI2){
+    void init(SDL_Texture* _tilesetImage, vector<vector<int>> _OI1, vector<vector<int>> _OI2){
+        tilesetImage = _tilesetImage;
         OI1 = _OI1;
         OI2 = _OI2;
         OI1CP = OI1;

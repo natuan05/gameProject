@@ -8,4 +8,6 @@ struct Inventory{
     map <OBJECTS, int> items;
 
 };
+
+
 #endif // MENU_H_INCLUDED
