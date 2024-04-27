@@ -46,6 +46,27 @@ void Draw_Background_Objects(TILEMAP &fullObjectsImage, Graphics &graphics){
 
 }
 
+void Character_Move(Mouse &mouse, Graphics &graphics, SPRITE_CHARACTER &Sprite_Robber){
+        const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+        mouse.UpdateDxDy(currentKeyStates);
+        if (mouse.isMoving()) {
+            Sprite_Robber.Run.tick(Sprite_Robber.prevTicksR);
+            Sprite_Robber.Slow.tick(Sprite_Robber.prevTicksS);
+        }
+
+        const Uint8* KeySlow = SDL_GetKeyboardState(NULL);
+        if (KeySlow[SDL_SCANCODE_LSHIFT]){
+            mouse.dx /= 2;
+            mouse.dy /= 2;
+        }
+        mouse.move();
+        if (KeySlow[SDL_SCANCODE_LSHIFT]){
+            graphics.render(mouse.x, mouse.y, Sprite_Robber.Slow, mouse.right);
+        }else{
+            graphics.render(mouse.x, mouse.y, Sprite_Robber.Run, mouse.right);
+        }
+
+}
 void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
     PlayMusic(graphics);
 
@@ -82,6 +103,8 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
     Sprite RobberSlow;
     RobberSlow.init(characterSlow, ROBBERSLOW_FRAMES, ROBBERSLOW_CLIPS);
 
+
+
     Mouse mouse;
     //KhoiTaoConCho
     DOG dog;
@@ -105,6 +128,8 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
     Uint32 prevTicks3 = SDL_GetTicks();
     Uint32 prevTicksForDogRun = SDL_GetTicks();
 
+    SPRITE_CHARACTER Sprite_Robber(RobberRun, RobberSlow);
+
     //bool các thứ
     bool camnow(1);
     SDL_Event event;
@@ -121,44 +146,26 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
 
         Draw_Background_Objects(fullObjectsImage, graphics);
 
+        Character_Move(mouse, graphics, Sprite_Robber);
 
-        //Cập nhật dx, dy theo bàn phím
-        const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-        mouse.UpdateDxDy(currentKeyStates);
-
-        //chuyển frame theo thời gian chạy;
-        if (mouse.isMoving()) {
-            RobberRun.tick(prevTicks3);
-            RobberSlow.tick(prevTicks);
-        }
-
-        const Uint8* KeySlow = SDL_GetKeyboardState(NULL);
-        if (KeySlow[SDL_SCANCODE_LSHIFT]){
-            mouse.dx /= 2;
-            mouse.dy /= 2;
-        }
-
-        //cập nhật toạ độ
-
-
-        mouse.move();
-
-        //CheckCollision
         CheckBorder(mouse);
         CheckCollisionWall(mouse, walls);
 
         const Uint8* Keyy = SDL_GetKeyboardState(NULL);
         CheckCollisionObjects(mouse, objects, Keyy, fullObjectsImage);
-
-        //Render character
-
-        if (KeySlow[SDL_SCANCODE_LSHIFT]){
-            graphics.render(mouse.x, mouse.y, RobberSlow, mouse.right);
-        }else{
-            graphics.render(mouse.x, mouse.y, RobberRun, mouse.right);
+        CheckCollisionObjectsToRender(mouse, vungchelap, graphics, fullObjectsImage);
+        //CheckHint
+        if(Collision3(mouse, hint)){
+            if (Keyy[SDL_SCANCODE_E]){
+                graphics.renderTexture(HintImage, 300, 0);
+            }
         }
+        //CheckCamera
+        CheckCollisionCamera(mouse, camerascan, camnow);
+
 
         //CheckDogChase
+        const Uint8* KeySlow = SDL_GetKeyboardState(NULL);
         if (dogchase == 0){
             if (Collision3(mouse, vcd)){
                 if (!KeySlow[SDL_SCANCODE_LSHIFT]){
@@ -187,28 +194,16 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
             graphics.renderTexture(sleepdog, 322, 465);
         }
 
-        //CheckVCL
-        CheckCollisionObjectsToRender(mouse, vungchelap, graphics, fullObjectsImage.OI1, tilesetImage);
-
-
         //Vẽ layer2 giảm độ mờ
         SDL_SetTextureAlphaMod(tilesetImage, 100);
         graphics.drawTileMap(Layer2, tilesetImage);
         SDL_SetTextureAlphaMod(tilesetImage, 255);
 
-        //Vẽ Camera
-        graphics.drawCamera(Camera1, Camera2, CamNow, prevTicks2, tilesetImage, camnow);
-        //CheckCamera
-        CheckCollisionCamera(mouse, camerascan, camnow);
-
-        //CheckHint
-        if(Collision3(mouse, hint)){
-            if (Keyy[SDL_SCANCODE_E]){
-                graphics.renderTexture(HintImage, 300, 0);
-            }
-        }
+        graphics.drawCamera(Camera1, Camera2, CamNow, prevTicks3, tilesetImage, camnow);
 
         graphics.renderTexture(nightImage, 0, 0);
+
+
 
         graphics.presentScene();
 

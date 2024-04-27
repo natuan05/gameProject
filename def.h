@@ -7,10 +7,6 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
-//Image
-
-
-
 
 const double INITIAL_SPEED = 1.5;
 

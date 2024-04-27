@@ -105,21 +105,21 @@ void InteractXX1_YY1(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
 
 
 //
-void VCL1(const ZONE vcl,  Graphics &graphics, const vector<vector<int>> &ObjectsImage, SDL_Texture* tilesetImage){
+void VCL1(const ZONE vcl,  Graphics &graphics, const TILEMAP &fullObjectsImage){
     int row= (vcl.y)/TILE_HEIGHT;
     int col= (vcl.x)/TILE_WIDTH;
     int x= col*32;
     int y= row*32;
-    graphics.renderTile(x, y, ObjectsImage[row][col], tilesetImage);
+    graphics.renderTile(x, y, fullObjectsImage.OI1[row][col], fullObjectsImage.tilesetImage);
 }
 
-void VCL2(const ZONE vcl,  Graphics &graphics, const vector<vector<int>> &ObjectsImage, SDL_Texture* tilesetImage){
+void VCL2(const ZONE vcl,  Graphics &graphics, const TILEMAP &fullObjectsImage){
     int row= (vcl.y)/TILE_HEIGHT;
     int col= (vcl.x)/TILE_WIDTH;
     int x= col*32;
     int y= row*32;
-    graphics.renderTile(x, y, ObjectsImage[row][col], tilesetImage);
-    graphics.renderTile(x + 32, y, ObjectsImage[row][col+1], tilesetImage);
+    graphics.renderTile(x, y, fullObjectsImage.OI1[row][col], fullObjectsImage.tilesetImage);
+    graphics.renderTile(x + 32, y, fullObjectsImage.OI1[row][col+1], fullObjectsImage.tilesetImage);
 }
 
 

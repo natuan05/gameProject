@@ -262,15 +262,14 @@ void CheckCollisionCamera(Mouse &mouse, const vector<ZONE> &camerascan, const bo
     }
 }
 
-void CheckNameVCL(const ZONE vcl, Graphics &graphics, const vector<vector<int>> &ObjectsImage, SDL_Texture* tilesetImage){
-    if(vcl.name == "singlesofa1") VCL2(vcl, graphics, ObjectsImage, tilesetImage);
-    if(vcl.name == "singlesofa2") VCL2(vcl, graphics, ObjectsImage, tilesetImage);
-    if(vcl.name == "table") VCL2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           (vcl, graphics, ObjectsImage, tilesetImage);
-    if(vcl.name == "doublesofa") VCL1(vcl, graphics, ObjectsImage, tilesetImage);
+void CheckNameVCL(const ZONE vcl, Graphics &graphics, const TILEMAP &fullObjectsImage){
+    if (vcl.name == "singlesofa1") VCL2(vcl, graphics, fullObjectsImage);
 }
-void CheckCollisionObjectsToRender(const Mouse &mouse, const vector<ZONE> vungchelap,  Graphics &graphics, const vector<vector<int>> &ObjectsImage, SDL_Texture* tilesetImage){
+
+
+void CheckCollisionObjectsToRender(const Mouse &mouse, const vector<ZONE> vungchelap,  Graphics &graphics, const TILEMAP &fullObjectsImage ){
     for (auto vcl : vungchelap){
-        if (Collision3(mouse, vcl)) CheckNameVCL(vcl, graphics, ObjectsImage, tilesetImage );
+        if (Collision3(mouse, vcl)) CheckNameVCL(vcl, graphics, fullObjectsImage);
     }
 
 }
