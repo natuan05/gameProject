@@ -36,10 +36,6 @@ void RunMenu(bool &menu, bool &gameplay, Graphics &graphics){
 void PlayMusic(Graphics &graphics){
     Mix_Music *BMusic = graphics.loadMusic("Music\\gloomy.mp3");
     graphics.play(BMusic);
-
-    void endMusic(){
-        if (BMusic != nullptr) Mix_FreeMusic( BMusic );
-    }
 }
 
 void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
@@ -62,7 +58,7 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
     vector<vector<int>> ObjectsImage1 = loadTileMapFromCSV("Map\\gameDemo2_Object.csv");
     vector<vector<int>> ObjectsImage2 = loadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
     OBJECTSIMAGE fullObjectsImage;
-    fullObjectsImage.init(ObjectsImage1, ObjectsImage2);
+    fullObjectsImage.init(tilesetImage, ObjectsImage1, ObjectsImage2);
 
     vector<vector<int>> Camera1 = loadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
     vector<vector<int>> Camera2 = loadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
@@ -120,8 +116,8 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
         graphics.drawTileMap(BackGround, tilesetImage);
 
         //VeObjects
-        graphics.drawTileMap(fullObjectsImage.OI1, tilesetImage);
-        graphics.drawTileMap(fullObjectsImage.OI2, tilesetImage);
+        graphics.drawTileMap(fullObjectsImage.OI1, fullObjectsImage.tilesetImage);
+        graphics.drawTileMap(fullObjectsImage.OI2, fullObjectsImage.tilesetImage);
 
 
 
