@@ -21,6 +21,8 @@ struct Mouse {
     double speed = INITIAL_SPEED;
     double speed2 = (double)speed/(sqrt(2));
 
+    bool right = 1;
+
 
     void move() {
         x += dx;
@@ -85,8 +87,11 @@ struct Mouse {
             }
         }
 
-
-
+        if (dx > 0){
+            right = 1;
+        }else if (dx < 0){
+            right = 0;
+        }
     }
 
 

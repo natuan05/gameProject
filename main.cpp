@@ -108,7 +108,6 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
     //bool các thứ
     bool camnow(1);
     SDL_Event event;
-    bool goR(0);
     bool dogchase(0);
     bool DoggoR(0);
 
@@ -140,11 +139,7 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
         }
 
         //cập nhật toạ độ
-        if (mouse.dx > 0){
-            goR = 1;
-        }else if ( mouse.dx < 0){
-            goR = 0;
-        }
+
 
         mouse.move();
 
@@ -158,9 +153,9 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
         //Render character
 
         if (KeySlow[SDL_SCANCODE_LSHIFT]){
-            graphics.render(mouse.x, mouse.y, RobberSlow, goR);
+            graphics.render(mouse.x, mouse.y, RobberSlow, mouse.right);
         }else{
-            graphics.render(mouse.x, mouse.y, RobberRun, goR);
+            graphics.render(mouse.x, mouse.y, RobberRun, mouse.right);
         }
 
         //CheckDogChase
@@ -182,9 +177,9 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
                 graphics.renderTexture(dogimage, dog.x, dog.y);
                 if (Collision4(mouse, dog)){
                     if (KeySlow[SDL_SCANCODE_LSHIFT]){
-                        graphics.render(mouse.x, mouse.y, RobberSlow, goR);
+                        graphics.render(mouse.x, mouse.y, RobberSlow, mouse.right);
                     }else{
-                        graphics.render(mouse.x, mouse.y, RobberRun, goR);
+                        graphics.render(mouse.x, mouse.y, RobberRun, mouse.right);
                     }
                 }
             }
