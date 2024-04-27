@@ -38,6 +38,14 @@ void PlayMusic(Graphics &graphics){
     graphics.play(BMusic);
 }
 
+void Draw_Background_Objects(TILEMAP &fullObjectsImage, Graphics &graphics){
+    SDL_RenderClear(graphics.renderer);
+    graphics.drawTileMap(fullObjectsImage.BackGround, fullObjectsImage.tilesetImage);
+    graphics.drawTileMap(fullObjectsImage.OI1, fullObjectsImage.tilesetImage);
+    graphics.drawTileMap(fullObjectsImage.OI2, fullObjectsImage.tilesetImage);
+
+}
+
 void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
     PlayMusic(graphics);
 
@@ -57,8 +65,9 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
 
     vector<vector<int>> ObjectsImage1 = loadTileMapFromCSV("Map\\gameDemo2_Object.csv");
     vector<vector<int>> ObjectsImage2 = loadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
-    OBJECTSIMAGE fullObjectsImage;
+    TILEMAP fullObjectsImage;
     fullObjectsImage.init(tilesetImage, ObjectsImage1, ObjectsImage2);
+    fullObjectsImage.BackGround = BackGround;
 
     vector<vector<int>> Camera1 = loadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
     vector<vector<int>> Camera2 = loadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
@@ -111,19 +120,12 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
             }
         }
 
-        SDL_RenderClear(graphics.renderer);
-
-        graphics.drawTileMap(BackGround, tilesetImage);
-
-        //VeObjects
-        graphics.drawTileMap(fullObjectsImage.OI1, fullObjectsImage.tilesetImage);
-        graphics.drawTileMap(fullObjectsImage.OI2, fullObjectsImage.tilesetImage);
-
+        Draw_Background_Objects(fullObjectsImage, graphics);
 
 
         //Cập nhật dx, dy theo bàn phím
         const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-        mouse.UpdateDxDy( currentKeyStates);
+        mouse.UpdateDxDy(currentKeyStates);
 
         //chuyển frame theo thời gian chạy;
         if (mouse.isMoving()) {

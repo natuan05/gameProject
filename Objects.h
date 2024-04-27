@@ -5,12 +5,14 @@
 
 using namespace std;
 
-struct OBJECTSIMAGE{
+struct TILEMAP{
     SDL_Texture* tilesetImage;
     vector<vector<int>> OI1;
     vector<vector<int>> OI1CP;
     vector<vector<int>> OI2;
     vector<vector<int>> OI2CP;
+
+    vector<vector<int>> BackGround;
 
     void init(SDL_Texture* _tilesetImage, vector<vector<int>> _OI1, vector<vector<int>> _OI2){
         tilesetImage = _tilesetImage;
@@ -19,6 +21,7 @@ struct OBJECTSIMAGE{
         OI1CP = OI1;
         OI2CP = OI2;
     }
+
 };
 
 

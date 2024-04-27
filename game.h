@@ -8,7 +8,7 @@
 #include "graphics.h"
 #include "menu.h"
 
-void CheckNameObject(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage);
+void CheckNameObject(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage);
 
 struct Mouse {
 
@@ -186,7 +186,7 @@ void CheckCollisionWall(Mouse &mouse, const vector<WALL> &walls) {
     }
 }
 
-void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* Keyy, OBJECTSIMAGE &fullObjectsImage){
+void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* Keyy, TILEMAP &fullObjectsImage){
 
         for (auto &ob : objects){
             if (ob.exist){
@@ -220,7 +220,7 @@ void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* 
 
 
 
-void CheckNameObject(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage){
+void CheckNameObject(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
     if(ob.name == "singlesofa1") InteractX_X1(ob, Key, fullObjectsImage);
     if(ob.name == "singlesofa2") InteractX_X1(ob, Key, fullObjectsImage);
     if(ob.name == "doublesofa") InteractY_Y1(ob, Key, fullObjectsImage);

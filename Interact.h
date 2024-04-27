@@ -7,7 +7,7 @@
 
 vector<vector<int>> ObjectsImageCopy ;
 
-void InteractX_X1(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage){
+void InteractX_X1(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
     int row= (ob.y)/TILE_HEIGHT;
     int col= (ob.x)/TILE_WIDTH;
 
@@ -30,7 +30,7 @@ void InteractX_X1(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage)
 
 }
 
-void InteractY_Y1(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage){
+void InteractY_Y1(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
     int row= (ob.y)/TILE_HEIGHT;
     int col= (ob.x)/TILE_WIDTH;
 
@@ -53,7 +53,7 @@ void InteractY_Y1(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage)
 
 }
 
-void InteractY0_Y(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage){
+void InteractY0_Y(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
     int row= (ob.y)/TILE_HEIGHT;
     int col= (ob.x)/TILE_WIDTH;
 
@@ -75,7 +75,7 @@ void InteractY0_Y(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage)
 
 
 }
-void InteractXX1_YY1(OBJECTS &ob, const Uint8* Key, OBJECTSIMAGE &fullObjectsImage){
+void InteractXX1_YY1(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
     int row= (ob.y)/TILE_HEIGHT;
     int col= (ob.x)/TILE_WIDTH;
 
