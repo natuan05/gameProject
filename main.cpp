@@ -3,6 +3,7 @@
 #include "game.h"
 #include "Map.h"
 #include "Objects.h"
+#include "menu.h"
 
 using namespace std;
 
@@ -33,16 +34,11 @@ void RunMenu(bool &menu, bool &gameplay, Graphics &graphics){
 
 }
 
-void PlayMusic(Graphics &graphics){
-    Mix_Music *BMusic = graphics.loadMusic("Music\\gloomy.mp3");
-    graphics.play(BMusic);
-}
-
-void Draw_Background_Objects(TILEMAP &fullObjectsImage, Graphics &graphics){
+void Draw_Background_Objects(TILEMAP &TileMap, Graphics &graphics){
     SDL_RenderClear(graphics.renderer);
-    graphics.drawTileMap(fullObjectsImage.BackGround, fullObjectsImage.tilesetImage);
-    graphics.drawTileMap(fullObjectsImage.OI1, fullObjectsImage.tilesetImage);
-    graphics.drawTileMap(fullObjectsImage.OI2, fullObjectsImage.tilesetImage);
+    graphics.drawTileMap(TileMap.BackGround, TileMap.tilesetImage);
+    graphics.drawTileMap(TileMap.OI1, TileMap.tilesetImage);
+    graphics.drawTileMap(TileMap.OI2, TileMap.tilesetImage);
 
 }
 
@@ -67,8 +63,74 @@ void Character_Move(Mouse &mouse, Graphics &graphics, SPRITE_CHARACTER &Sprite_R
         }
 
 }
+
+void DRAW_CAMERA(TILEMAP &TileMap, Graphics &graphics){
+        Uint32 currentTicks = SDL_GetTicks();
+        Uint32 deltaTicks = currentTicks - TileMap.prevTicksForCam;
+
+        if (deltaTicks >= MS_PER_CAMERA){
+            TileMap.CameraNow= (TileMap.CameraNow == TileMap.Camera1) ? TileMap.Camera2 : TileMap.Camera1;
+            TileMap.cn= (TileMap.CameraNow == TileMap.Camera1) ? 1 : 0;
+            TileMap.prevTicksForCam = currentTicks;
+        }
+
+        graphics.drawTileMap(TileMap.CameraNow, TileMap.tilesetImage);
+
+}
+
+void DRAW_LAYER2(TILEMAP &TileMap, Graphics &graphics, IMAGE &Image){
+        SDL_SetTextureAlphaMod(TileMap.tilesetImage, 100);
+        graphics.drawTileMap(TileMap.Layer2, TileMap.tilesetImage);
+        SDL_SetTextureAlphaMod(TileMap.tilesetImage, 255);
+
+        DRAW_CAMERA(TileMap, graphics);
+
+        graphics.renderTexture(Image.NightMark, 0, 0);
+        graphics.presentScene();
+}
+
+void CHECK_DOGCHASE(Mouse &mouse, DOG &dog, IMAGE &Image, Graphics &graphics, ZONE &vcd){
+        const Uint8* KeySlow = SDL_GetKeyboardState(NULL);
+        if (dog.dogchase == 0){
+            if (Collision3(mouse, vcd)){
+                if (!KeySlow[SDL_SCANCODE_LSHIFT]){
+                    dog.dogchase = 1;
+                }
+            }
+        }
+        if (dog.dogchase){
+            if (Collision3(mouse, vcd) && !Collision3(mouse, dog)){
+                dog.DogRun.tickdog(dog.prevTicksForDogRun);
+                updateDogPosition(mouse, dog);
+                graphics.render(dog.x, dog.y, dog.DogRun, dog.right);
+
+            }else{
+                graphics.renderTexture(Image.DogImage, dog.x, dog.y);
+            }
+        }else{
+            graphics.renderTexture(Image.SleepDog, 322, 465);
+        }
+}
+
+void COLLISION_INTERACT(Mouse &mouse, TILEMAP &TileMap, WALL_OBJECTS_ZONE &woz, IMAGE &Image, Graphics &graphics ){
+    CheckBorder(mouse);
+    CheckCollisionWall(mouse, woz.walls);
+
+    const Uint8* Keyy = SDL_GetKeyboardState(NULL);
+    CheckCollisionObjects(mouse, woz.objects, Keyy, TileMap);
+    CheckCollisionObjectsToRender(mouse, woz.vungchelap, graphics, TileMap);
+    //CheckHint
+    if(Collision3(mouse, woz.hint)){
+        if (Keyy[SDL_SCANCODE_E]){
+            graphics.renderTexture(Image.Hint1, 300, 0);
+        }
+    }
+    //CheckCamera
+    CheckCollisionCamera(mouse, woz.camerascan, TileMap.cn);
+
+}
+
 void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
-    PlayMusic(graphics);
 
     //Khởi tạo all image...
     SDL_Texture* tilesetImage= graphics.loadTexture("Map\\tilemap.png");
@@ -76,23 +138,26 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
     vector<vector<int>> Layer2 = loadTileMapFromCSV("Map\\gameDemo2_Layer2.csv");
 
     SDL_Texture* HintImage = graphics.loadTexture("img\\BeCarefulCamera.png");
-
     SDL_Texture* sleepdog = graphics.loadTexture("img\\sleepdog.png");
     SDL_Texture* dogimage = graphics.loadTexture("img\\dog.png");
-
-
     SDL_Texture* nightImage = graphics.loadTexture("img\\night.png");
     SDL_SetTextureAlphaMod(nightImage, 100);
 
     vector<vector<int>> ObjectsImage1 = loadTileMapFromCSV("Map\\gameDemo2_Object.csv");
     vector<vector<int>> ObjectsImage2 = loadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
-    TILEMAP fullObjectsImage;
-    fullObjectsImage.init(tilesetImage, ObjectsImage1, ObjectsImage2);
-    fullObjectsImage.BackGround = BackGround;
+    TILEMAP TileMap;
+    TileMap.init(tilesetImage, ObjectsImage1, ObjectsImage2);
+    TileMap.BackGround = BackGround;
 
     vector<vector<int>> Camera1 = loadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
     vector<vector<int>> Camera2 = loadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
     vector<vector<int>> CamNow = Camera1;
+
+    TileMap.Camera1 = Camera1;
+    TileMap.Camera2 = Camera2;
+    TileMap.CameraNow = Camera1;
+
+    TileMap.Layer2 = Layer2;
 
     //Khoitaonhanvat
     SDL_Texture* characterRun= graphics.loadTexture(ROBBERRUN_SPRITE_FILE);
@@ -111,6 +176,7 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
     SDL_Texture* dogrun= graphics.loadTexture(DOGRUN_SPRITE_FILE);
     Sprite DogRun;
     DogRun.init(dogrun, DOGRUN_FRAMES, DOGRUN_CLIPS);
+    dog.DogRun = DogRun;
 
 
     //KhoitaoObjects
@@ -122,19 +188,24 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
     vector<ZONE> escape = EscapeInit();
     ZONE hint("hint", 256, 256, 32, 32);
 
-    //Thoigiandoikhunghinh
-    Uint32 prevTicks = SDL_GetTicks();
-    Uint32 prevTicks2 = SDL_GetTicks();
-    Uint32 prevTicks3 = SDL_GetTicks();
-    Uint32 prevTicksForDogRun = SDL_GetTicks();
 
     SPRITE_CHARACTER Sprite_Robber(RobberRun, RobberSlow);
 
-    //bool các thứ
-    bool camnow(1);
+    IMAGE Image;
+    Image.DogImage = dogimage;
+    Image.Hint1 = HintImage;
+    Image.NightMark = nightImage;
+    Image.SleepDog = sleepdog;
+
+    WALL_OBJECTS_ZONE woz;
+    woz.hint = hint;
+    woz.objects = objects;
+    woz.vungchelap = vungchelap;
+    woz.walls = walls;
+    woz.vungchoduoi = vcd;
+    woz.camerascan = camerascan;
+
     SDL_Event event;
-    bool dogchase(0);
-    bool DoggoR(0);
 
     while(gameplay){
         while (SDL_PollEvent(&event)) {
@@ -144,68 +215,12 @@ void GamePlay(bool &gameplay, bool &menu, Graphics &graphics){
             }
         }
 
-        Draw_Background_Objects(fullObjectsImage, graphics);
-
+        Draw_Background_Objects(TileMap, graphics);
         Character_Move(mouse, graphics, Sprite_Robber);
+        COLLISION_INTERACT(mouse, TileMap, woz, Image, graphics);
+        CHECK_DOGCHASE(mouse, dog, Image, graphics, vcd);
+        DRAW_LAYER2(TileMap, graphics, Image);
 
-        CheckBorder(mouse);
-        CheckCollisionWall(mouse, walls);
-
-        const Uint8* Keyy = SDL_GetKeyboardState(NULL);
-        CheckCollisionObjects(mouse, objects, Keyy, fullObjectsImage);
-        CheckCollisionObjectsToRender(mouse, vungchelap, graphics, fullObjectsImage);
-        //CheckHint
-        if(Collision3(mouse, hint)){
-            if (Keyy[SDL_SCANCODE_E]){
-                graphics.renderTexture(HintImage, 300, 0);
-            }
-        }
-        //CheckCamera
-        CheckCollisionCamera(mouse, camerascan, camnow);
-
-
-        //CheckDogChase
-        const Uint8* KeySlow = SDL_GetKeyboardState(NULL);
-        if (dogchase == 0){
-            if (Collision3(mouse, vcd)){
-                if (!KeySlow[SDL_SCANCODE_LSHIFT]){
-                    dogchase = 1;
-                }
-            }
-        }
-        if (dogchase){
-            if (Collision3(mouse, vcd) && !Collision3(mouse, dog)){
-                DogRun.tickdog(prevTicksForDogRun);
-                updateDogPosition(mouse, dog, DoggoR);
-                graphics.render(dog.x, dog.y, DogRun, DoggoR);
-
-            }else{
-
-                graphics.renderTexture(dogimage, dog.x, dog.y);
-                if (Collision4(mouse, dog)){
-                    if (KeySlow[SDL_SCANCODE_LSHIFT]){
-                        graphics.render(mouse.x, mouse.y, RobberSlow, mouse.right);
-                    }else{
-                        graphics.render(mouse.x, mouse.y, RobberRun, mouse.right);
-                    }
-                }
-            }
-        }else{
-            graphics.renderTexture(sleepdog, 322, 465);
-        }
-
-        //Vẽ layer2 giảm độ mờ
-        SDL_SetTextureAlphaMod(tilesetImage, 100);
-        graphics.drawTileMap(Layer2, tilesetImage);
-        SDL_SetTextureAlphaMod(tilesetImage, 255);
-
-        graphics.drawCamera(Camera1, Camera2, CamNow, prevTicks3, tilesetImage, camnow);
-
-        graphics.renderTexture(nightImage, 0, 0);
-
-
-
-        graphics.presentScene();
 
         SDL_Delay(10);
 
@@ -239,5 +254,3 @@ int main(int argc, char* argv[])
     return 0;
 
 }
-
-

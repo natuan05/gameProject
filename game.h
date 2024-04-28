@@ -8,8 +8,6 @@
 #include "graphics.h"
 #include "menu.h"
 
-void CheckNameObject(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage);
-
 struct Mouse {
 
     double x=   224;
@@ -96,17 +94,9 @@ struct Mouse {
 
 
 };
-struct DOG{
-    double x = 322;
-    double y = 465;
-    int w = 48;
-    int h = 24;
-    double dx = 0, dy = 0;
-    double speed = INITIAL_DOGSPEED;
 
 
-};
-void updateDogPosition(Mouse &mouse, DOG &dog, bool &DoggoR) {
+void updateDogPosition(Mouse &mouse, DOG &dog) {
     double distance = sqrt(pow(mouse.x - dog.x, 2) + pow(mouse.y - dog.y, 2));
 
     if (distance > dog.speed) {
@@ -114,9 +104,9 @@ void updateDogPosition(Mouse &mouse, DOG &dog, bool &DoggoR) {
         dog.dy = (mouse.y - dog.y ) / distance;
 
         if (dog.dx > 0){
-            DoggoR = 1;
+            dog.right = 1;
         }else if (dog.dx < 0){
-            DoggoR = 0;
+            dog.right = 0;
         }
 
         dog.x += dog.dx * dog.speed;
@@ -181,7 +171,7 @@ int Collision4(const Mouse &mouse, const DOG &dog){
     return 0;
 }
 
-void CheckCollisionWall(Mouse &mouse, const vector<WALL> &walls) {
+void CheckCollisionWall(Mouse &mouse, vector<WALL> &walls) {
     for (const auto &wall : walls) {
         if (Collision1(mouse, wall) == 1) mouse.x = wall.x - 32;
         if (Collision1(mouse, wall) == 2) mouse.x = wall.x + wall.w;
@@ -189,6 +179,15 @@ void CheckCollisionWall(Mouse &mouse, const vector<WALL> &walls) {
         if (Collision1(mouse, wall) == 4) mouse.y = wall.y + wall.h - 32;
 
     }
+}
+
+void CheckNameObject(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
+    if(ob.name == "singlesofa1") InteractX_X1(ob, Key, fullObjectsImage);
+    if(ob.name == "singlesofa2") InteractX_X1(ob, Key, fullObjectsImage);
+    if(ob.name == "doublesofa") InteractY_Y1(ob, Key, fullObjectsImage);
+    if(ob.name == "clock") InteractY0_Y(ob, Key, fullObjectsImage);
+    if(ob.name == "table") InteractXX1_YY1(ob, Key, fullObjectsImage);
+
 }
 
 void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* Keyy, TILEMAP &fullObjectsImage){
@@ -222,19 +221,6 @@ void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* 
         }
 
 }
-
-
-
-void CheckNameObject(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
-    if(ob.name == "singlesofa1") InteractX_X1(ob, Key, fullObjectsImage);
-    if(ob.name == "singlesofa2") InteractX_X1(ob, Key, fullObjectsImage);
-    if(ob.name == "doublesofa") InteractY_Y1(ob, Key, fullObjectsImage);
-    if(ob.name == "clock") InteractY0_Y(ob, Key, fullObjectsImage);
-    if(ob.name == "table") InteractXX1_YY1(ob, Key, fullObjectsImage);
-
-}
-
-
 
 void CheckCollisionCamera(Mouse &mouse, const vector<ZONE> &camerascan, const bool &camnow){
     if (camnow){

@@ -3,7 +3,6 @@
 
 #include "def.h"
 
-
 using namespace std;
 
 struct Sprite {
@@ -240,18 +239,7 @@ struct Graphics{
         }
     }
 
-    void drawCamera(const vector<vector<int>> &Cam1, const vector<vector<int>> &Cam2, vector<vector<int>> &CamNow, Uint32 &prevTicks, SDL_Texture* tilesetImage, bool &camnow){
-        Uint32 currentTicks = SDL_GetTicks();
-        Uint32 deltaTicks = currentTicks - prevTicks;
 
-        if (deltaTicks >= MS_PER_CAMERA){
-            CamNow= (CamNow == Cam1) ? Cam2 : Cam1;
-            camnow= (CamNow == Cam1) ? 1 : 0;
-            prevTicks = currentTicks;
-        }
-
-        drawTileMap(CamNow, tilesetImage);
-    }
 
     void quit()
     {

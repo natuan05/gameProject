@@ -3,11 +3,7 @@
 
 #include "def.h"
 #include "graphics.h"
-
-struct Inventory{
-    map <OBJECTS, int> items;
-
-};
+#include "Objects.h"
 
 struct SPRITE_CHARACTER{
     Sprite Run;
@@ -21,6 +17,68 @@ struct SPRITE_CHARACTER{
         Slow = _Slow;
     }
 
+};
+
+struct DOG{
+    double x = 322;
+    double y = 465;
+    int w = 48;
+    int h = 24;
+    double dx = 0, dy = 0;
+    double speed = INITIAL_DOGSPEED;
+
+    bool dogchase = 0;
+    bool right = 1;
+    Uint32 prevTicksForDogRun = SDL_GetTicks();
+
+    Sprite DogRun;
+};
+
+
+struct TILEMAP{
+    SDL_Texture* tilesetImage;
+    vector<vector<int>> OI1;
+    vector<vector<int>> OI1CP;
+    vector<vector<int>> OI2;
+    vector<vector<int>> OI2CP;
+
+    vector<vector<int>> BackGround;
+    vector<vector<int>> Layer2;
+
+    vector<vector<int>> Camera1;
+    vector<vector<int>> Camera2;
+    vector<vector<int>> CameraNow;
+    Uint32 prevTicksForCam = SDL_GetTicks();
+    bool cn = 1;
+
+    void init(SDL_Texture* _tilesetImage, vector<vector<int>> _OI1, vector<vector<int>> _OI2){
+        tilesetImage = _tilesetImage;
+        OI1 = _OI1;
+        OI2 = _OI2;
+        OI1CP = OI1;
+        OI2CP = OI2;
+    }
+
+
+
+};
+
+struct IMAGE{
+    SDL_Texture* SleepDog;
+    SDL_Texture* DogImage;
+    SDL_Texture* NightMark;
+    SDL_Texture* Hint1;
+
+};
+
+struct WALL_OBJECTS_ZONE{
+    vector<WALL> walls;
+    vector<OBJECTS> objects;
+    vector<ZONE> vungchelap;
+    vector<ZONE> camerascan;
+
+    ZONE vungchoduoi;
+    ZONE hint;
 };
 
 #endif // MENU_H_INCLUDED

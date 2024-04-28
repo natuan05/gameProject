@@ -4,6 +4,7 @@
 #include "def.h"
 #include "Map.h"
 #include "graphics.h"
+#include "menu.h"
 
 vector<vector<int>> ObjectsImageCopy ;
 
@@ -102,9 +103,6 @@ void InteractXX1_YY1(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
 
 }
 
-
-
-//
 void VCL1(const ZONE vcl,  Graphics &graphics, const TILEMAP &fullObjectsImage){
     int row= (vcl.y)/TILE_HEIGHT;
     int col= (vcl.x)/TILE_WIDTH;

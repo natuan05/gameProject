@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1714225424 source:d:\ltnc\gamedemo2\main.cpp
+1714280334 source:d:\ltnc\gamedemo2\main.cpp
 	"def.h"
 	"graphics.h"
 	"game.h"
 	"Map.h"
 	"Objects.h"
+	"menu.h"
 
 1714222273 d:\ltnc\gamedemo2\def.h
 	<bits/stdc++.h>
@@ -13,10 +14,10 @@
 	<SDL_ttf.h>
 	<SDL_mixer.h>
 
-1714200983 d:\ltnc\gamedemo2\graphics.h
+1714271422 d:\ltnc\gamedemo2\graphics.h
 	"def.h"
 
-1714225520 d:\ltnc\gamedemo2\game.h
+1714280278 d:\ltnc\gamedemo2\game.h
 	"Objects.h"
 	"Interact.h"
 	"graphics.h"
@@ -26,17 +27,19 @@
 	"def.h"
 	"game.h"
 
-1714216208 d:\ltnc\gamedemo2\objects.h
+1714279701 d:\ltnc\gamedemo2\objects.h
 	"def.h"
 
-1714225123 d:\ltnc\gamedemo2\interact.h
+1714269449 d:\ltnc\gamedemo2\interact.h
 	"def.h"
 	"Map.h"
 	"graphics.h"
+	"menu.h"
 
 1713897825 d:\ltnc\gamedemo2\dog.h
 
-1714223377 d:\ltnc\gamedemo2\menu.h
+1714279655 d:\ltnc\gamedemo2\menu.h
 	"def.h"
 	"graphics.h"
+	"Objects.h"
 
