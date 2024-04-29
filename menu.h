@@ -5,17 +5,19 @@
 #include "graphics.h"
 #include "Objects.h"
 
+struct BOOL{
+    bool quit = 0;
+    bool gamePlay = 0;
+    bool menu = 1;
+    bool shop = 0;
+};
+
 struct SPRITE_CHARACTER{
     Sprite Run;
     Sprite Slow;
 
     Uint32 prevTicksR= SDL_GetTicks();
     Uint32 prevTicksS= SDL_GetTicks();
-
-    SPRITE_CHARACTER(Sprite &_Run, Sprite &_Slow){
-        Run = _Run;
-        Slow = _Slow;
-    }
 
 };
 
@@ -68,6 +70,7 @@ struct IMAGE{
     SDL_Texture* DogImage;
     SDL_Texture* NightMark;
     SDL_Texture* Hint1;
+    SDL_Texture* DogRuns;
 
 };
 
@@ -79,6 +82,12 @@ struct WALL_OBJECTS_ZONE{
 
     ZONE vungchoduoi;
     ZONE hint;
+};
+
+struct BUTTONS{
+    ZONE Bshop;
+    ZONE Bmap;
+
 };
 
 #endif // MENU_H_INCLUDED

@@ -6,8 +6,6 @@
 #include "graphics.h"
 #include "menu.h"
 
-vector<vector<int>> ObjectsImageCopy ;
-
 void InteractX_X1(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
     int row= (ob.y)/TILE_HEIGHT;
     int col= (ob.x)/TILE_WIDTH;
