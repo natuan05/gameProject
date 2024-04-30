@@ -54,7 +54,11 @@ struct Mouse {
         return (dx != 0 || dy != 0);
     }
 
-    void UpdateDxDy(const Uint8* currentKeyStates){
+    void UpdateDxDy(const Uint8* currentKeyStates);
+
+
+};
+void Mouse::UpdateDxDy(const Uint8* currentKeyStates){
 
         if (currentKeyStates[SDL_SCANCODE_S]) turnSouth();
         if (currentKeyStates[SDL_SCANCODE_W]) turnNorth();
@@ -91,10 +95,6 @@ struct Mouse {
             right = 0;
         }
     }
-
-
-};
-
 
 void updateDogPosition(Mouse &mouse, DOG &dog) {
     double distance = sqrt(pow(mouse.x - dog.x, 2) + pow(mouse.y - dog.y, 2));
@@ -158,7 +158,7 @@ int Collision3(const Mouse &mouse, const OBJECTS &ob){
 }
 
 int Collision3(const Mouse &mouse, const ZONE &z){
-    if (mouse.x <= z.x + z.w && mouse.x + 32 >= z.x && mouse.y <= z.y + z.h -32&& mouse.y + 32 >= z.y) return 1;
+    if (mouse.x < z.x + z.w && mouse.x + 32 > z.x && mouse.y < z.y + z.h -32&& mouse.y + 32 > z.y) return 1;
     return 0;
 }
 
@@ -166,6 +166,7 @@ int Collision3(const Mouse &mouse, const DOG &dog){
     if (mouse.x <= dog.x + dog.w && mouse.x + 32 >= dog.x && mouse.y <= dog.y + dog.h && mouse.y + 32 >= dog.y) return 1;
     return 0;
 }
+
 int Collision4(const Mouse &mouse, const DOG &dog){
     if (mouse.x <= dog.x + dog.w && mouse.x + mouse.head_w >= dog.x && mouse.y <= dog.y + dog.h && mouse.y + mouse.head_h >= dog.y) return 1;
     return 0;

@@ -74,6 +74,12 @@ struct IMAGE{
 
 };
 
+struct MENU_IMAGE{
+    Graphics graphics;
+    SDL_Texture* MenuBackground;
+    SDL_Texture* ButtonMap;
+};
+
 struct WALL_OBJECTS_ZONE{
     vector<WALL> walls;
     vector<OBJECTS> objects;

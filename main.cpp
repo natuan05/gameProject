@@ -8,16 +8,25 @@
 
 using namespace std;
 
-void MENU_BUTTONS_INIT(BUTTONS &Buttons){
-    ZONE M("Mapbutton", 156, 126, 320, 110);
-    ZONE S("Shopbutton", 156, 500, 320, 110);
+void MENU_IMAGE_INIT(Graphics &graphics, MENU_IMAGE &MImage){
+    SDL_Texture* menubackground = graphics.loadTexture("img\\menubackground.png");
+    SDL_Texture* pressmap = graphics.loadTexture("img\\PressMapButton.png");
 
-    Buttons.Bmap = M;
-    Buttons.Bshop = S;
+    MImage.MenuBackground = menubackground;
+    MImage.ButtonMap = pressmap;
+    MImage.graphics = graphics;
+}
+
+void DRAW_MENU(MENU_IMAGE &MImage){
+    SDL_RenderClear(MImage.graphics.renderer);
+    MImage.graphics.renderTexture(MImage.MenuBackground, 0, 0);
+    MImage.graphics.presentScene();
 }
 
 void RunMenu(BOOL &b, Graphics &graphics){
-    SDL_Texture* menubackground = graphics.loadTexture("img\\menubackground.png");
+
+    MENU_IMAGE MImage;
+    MENU_IMAGE_INIT(graphics, MImage);
 
     BUTTONS Buttons;
     MENU_BUTTONS_INIT(Buttons);
@@ -31,20 +40,16 @@ void RunMenu(BOOL &b, Graphics &graphics){
                 if (e.type == SDL_QUIT){
                     b.menu = 0;
                     b.quit = 1;
+                }else{
+                    Check_Button(Buttons, b, MImage, e);
                 }
         }
-        SDL_RenderClear(graphics.renderer);
-        graphics.renderTexture(menubackground, 0, 0);
 
-        CheckButton(Buttons, b);
+        DRAW_MENU(MImage);
 
-
-        graphics.presentScene();
         SDL_Delay(10);
     }
     if (gMusic != nullptr) Mix_FreeMusic( gMusic );
-
-
 }
 
 void TILEMAP_INIT(TILEMAP &TileMap, Graphics &graphics){
@@ -284,6 +289,7 @@ int main(int argc, char* argv[])
     while (!b.quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) b.quit = true;
+
         }
 
         if(b.menu){
