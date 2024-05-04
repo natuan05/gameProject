@@ -235,26 +235,55 @@ void DOG_INIT(IMAGE &Image, DOG &dog){
     dog.DogRun = DogRun;
 }
 
+void UPDATE_TIME(TIME &GameplayTime, BOOL &b, IMAGE &Image, TTF_Font* font, const SDL_Color &textColor ){
+    Uint32 currentTicks = SDL_GetTicks();
+    Uint32 deltaTime = currentTicks - GameplayTime.prevTicks;
+    GameplayTime.prevTicks = currentTicks;
+
+    GameplayTime.countdownTimer -= deltaTime;
+
+    if (GameplayTime.countdownTimer <= 0) {
+        b.gamePlay = false;
+        b.menu = true;
+    }
+    int minutes = static_cast<int>(GameplayTime.countdownTimer / 60000);
+    int seconds = static_cast<int>((GameplayTime.countdownTimer - (minutes * 60000)) / 1000);
+
+    string timeStr = to_string(minutes) + ":" + std::to_string(seconds);
+
+    Image.TimeText = Image.graphics.renderText(timeStr.c_str(), font, textColor);
+}
+
 void GamePlay(BOOL &b, Graphics &graphics){
     Mouse mouse;
 
     TILEMAP TileMap;
     TILEMAP_INIT(TileMap, graphics);
+
     SPRITE_CHARACTER Sprite_Robber;
     SPRITE_CHARACTER_INIT(graphics, Sprite_Robber);
+
     IMAGE Image;
     IMAGE_INIT(Image, graphics);
+
     WALL_OBJECTS_ZONE woz;
     WOZ_INIT(woz, graphics);
+
     DOG dog;
     DOG_INIT(Image, dog);
+
     SDL_Event event;
 
     Mix_Music *gMusic = graphics.loadMusic("Music\\sneaky_feet.mp3");
     graphics.play(gMusic);
 
-    double countdownTimer = INITIAL_COUNTDOWN_TIMER;
-    Uint32 prevTicks = SDL_GetTicks();
+    TTF_Font* font = graphics.loadFont("font\\VT323-Regular.ttf", 50);
+    SDL_Color textColor = {255, 255, 255, 255};
+
+//    double countdownTimer = INITIAL_COUNTDOWN_TIMER;
+//    Uint32 prevTicks = SDL_GetTicks();
+//
+    TIME GameplayTime;
 
     while(b.gamePlay){
         while (SDL_PollEvent(&event)) {
@@ -263,17 +292,7 @@ void GamePlay(BOOL &b, Graphics &graphics){
                 b.quit = 1;
             }
         }
-
-        Uint32 currentTicks = SDL_GetTicks();
-        Uint32 deltaTime = currentTicks - prevTicks;
-        prevTicks = currentTicks;
-
-        countdownTimer -= deltaTime;
-
-        if (countdownTimer <= 0) {
-            b.gamePlay = false;
-            b.menu = true;
-        }
+        UPDATE_TIME(GameplayTime, b, Image, font, textColor);
 
         DRAW_BACKGROUND_OBJECTS(TileMap);
 
@@ -286,6 +305,8 @@ void GamePlay(BOOL &b, Graphics &graphics){
         DRAW_LAYER2(TileMap, Image);
 
         CHECK_HINT(mouse, woz, Image);
+
+        graphics.renderTexture(Image.TimeText, 10, 10);
 
         graphics.presentScene();
 

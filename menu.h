@@ -74,6 +74,7 @@ struct IMAGE{
     SDL_Texture* Hint1;
     SDL_Texture* DogRuns;
     SDL_Texture* Busted;
+    SDL_Texture* TimeText;
 };
 
 struct MENU_IMAGE{
@@ -98,6 +99,11 @@ struct BUTTONS{
     ZONE Bshop;
     ZONE Bmap;
 
+};
+
+struct TIME{
+    double countdownTimer = INITIAL_COUNTDOWN_TIMER;
+    Uint32 prevTicks = SDL_GetTicks();
 };
 
 #endif // MENU_H_INCLUDED
