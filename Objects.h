@@ -112,6 +112,12 @@ vector<OBJECTS> ObjectsInit(){
     ob.emplace_back("pots2", 0, 0, 867, 304, 26, 12);
     ob.emplace_back("kennel", 0, 0, 322, 465, 28, 15);
     ob.emplace_back("truck", 0, 0, 160, 32, 64, 128);
+    ob.emplace_back("Bep", 0, 0, 672, 640, 159, 32);
+    ob.emplace_back("BanAn", 0, 0, 704, 538.73, 96, 47.63);
+    ob.emplace_back("TableTv2", 0, 0, 1058.75, 512, 27.75, 64);
+    ob.emplace_back("bed", 0, 0, 1152, 517, 64, 59);
+    ob.emplace_back("bookshelf", 0, 0, 992, 640, 224, 32);
+    ob.emplace_back("Ke", 0, 0, 1194.96, 486.45, 20.77, 25.51);
 
     return ob;
 }
@@ -133,20 +139,28 @@ vector<ZONE> CamScanInit(){
 
 vector<ZONE> VCLInit(){
     vector<ZONE> vcl;
-    vcl.emplace_back("doublesofa", 672, 160, 32, 14);
-    vcl.emplace_back("table", 720, 171, 32, 9);
-    vcl.emplace_back("singlesofa2", 717, 129, 38, 14);
-    vcl.emplace_back("singlesofa1", 717, 227, 38, 11);
+    vcl.emplace_back("v1", 672, 160, 32, 14);
+    vcl.emplace_back("v2", 720, 171, 32, 9);
+    vcl.emplace_back("v2", 717, 129, 38, 14);
+    vcl.emplace_back("v2", 717, 227, 38, 11);
+    vcl.emplace_back("v2", 704, 527.275, 32, 14.8922818181819);
+    vcl.emplace_back("v1", 842.875, 143.75, 9.25, 43.375);
+    vcl.emplace_back("v1", 1195, 480, 20.9375, 8);
+    vcl.emplace_back("v3", 672.75, 261.75, 30.875, 44.4545454545454);
+    vcl.emplace_back("v3", 864.563, 262.167, 30.875, 44.8181818181818);
+    vcl.emplace_back("v4", 672.182, 623.818, 64.1818, 18.6477);
+    vcl.emplace_back("v4", 736.364, 623.818, 63.4545, 18.7273);
+    vcl.emplace_back("v4", 792.545, 623.818, 39.6364, 18.9773);
+    vcl.emplace_back("v2", 736, 527.534, 64, 14.4431818181819);
+    vcl.emplace_back("v1", 320, 448, 32.125, 18.9375);
+    vcl.emplace_back("v4", 992, 628, 64, 16);
+    vcl.emplace_back("v4", 1056, 628, 64, 16);
+    vcl.emplace_back("v4", 1120, 628, 64, 16);
+    vcl.emplace_back("v3", 1184, 628, 31.9565217391305, 16);
 
     return vcl;
 }
 
-vector <ZONE> EscapeInit(){
-    vector<ZONE> ei;
-    ei.emplace_back("car_trunk", 169, 157, 48, 16);
-    ei.emplace_back("Enter", 224, 64, 32, 32);
-    return ei;
-}
 
 
 #endif

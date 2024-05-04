@@ -7,6 +7,7 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
+const double INITIAL_COUNTDOWN_TIMER = 2*60*1000;
 
 const double INITIAL_SPEED = 1.5;
 

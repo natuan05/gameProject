@@ -158,17 +158,12 @@ int Collision3(const Mouse &mouse, const OBJECTS &ob){
 }
 
 int Collision3(const Mouse &mouse, const ZONE &z){
-    if (mouse.x < z.x + z.w && mouse.x + 32 > z.x && mouse.y < z.y + z.h -32&& mouse.y + 32 > z.y) return 1;
+    if (mouse.x < z.x + z.w && mouse.x + 32 > z.x && mouse.y <= z.y + z.h -32&& mouse.y + 32 >= z.y) return 1;
     return 0;
 }
 
 int Collision3(const Mouse &mouse, const DOG &dog){
     if (mouse.x <= dog.x + dog.w && mouse.x + 32 >= dog.x && mouse.y <= dog.y + dog.h && mouse.y + 32 >= dog.y) return 1;
-    return 0;
-}
-
-int Collision4(const Mouse &mouse, const DOG &dog){
-    if (mouse.x <= dog.x + dog.w && mouse.x + mouse.head_w >= dog.x && mouse.y <= dog.y + dog.h && mouse.y + mouse.head_h >= dog.y) return 1;
     return 0;
 }
 
@@ -250,7 +245,10 @@ void CheckCollisionCamera(Mouse &mouse, const vector<ZONE> &camerascan, const bo
 }
 
 void CheckNameVCL(const ZONE vcl, Graphics &graphics, const TILEMAP &fullObjectsImage){
-    if (vcl.name == "singlesofa1") VCL2(vcl, graphics, fullObjectsImage);
+    if (vcl.name == "v1") VCL1(vcl, graphics, fullObjectsImage);
+    if (vcl.name == "v2") VCL2(vcl, graphics, fullObjectsImage);
+    if (vcl.name == "v3") VCL3(vcl, graphics, fullObjectsImage);
+    if (vcl.name == "v4") VCL4(vcl, graphics, fullObjectsImage);
 }
 
 

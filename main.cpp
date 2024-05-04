@@ -10,11 +10,12 @@ using namespace std;
 
 void MENU_IMAGE_INIT(Graphics &graphics, MENU_IMAGE &MImage){
     SDL_Texture* menubackground = graphics.loadTexture("img\\menubackground.png");
-    SDL_Texture* pressmap = graphics.loadTexture("img\\PressMapButton.png");
+    SDL_Texture* ButtonMap = graphics.loadTexture("img\\PressMapButton.png");
 
-    MImage.MenuBackground = menubackground;
-    MImage.ButtonMap = pressmap;
     MImage.graphics = graphics;
+    MImage.MenuBackground = menubackground;
+    MImage.ButtonMap = ButtonMap;
+
 }
 
 void DRAW_MENU(MENU_IMAGE &MImage){
@@ -62,6 +63,7 @@ void TILEMAP_INIT(TILEMAP &TileMap, Graphics &graphics){
     vector<vector<int>> Camera2 = loadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
     vector<vector<int>> CamNow = Camera1;
 
+    TileMap.graphics = graphics;
     TileMap.init(tilesetImage, ObjectsImage1, ObjectsImage2);
     TileMap.BackGround = BackGround;
     TileMap.Camera1 = Camera1;
@@ -77,12 +79,15 @@ void IMAGE_INIT(IMAGE &Image, Graphics &graphics){
     SDL_Texture* dogruns= graphics.loadTexture(DOGRUN_SPRITE_FILE);
     SDL_Texture* nightImage = graphics.loadTexture("img\\night.png");
     SDL_SetTextureAlphaMod(nightImage, 100);
+    SDL_Texture* Busted = graphics.loadTexture("img\\Busted.png");
 
+    Image.graphics = graphics;
     Image.DogImage = dogimage;
     Image.Hint1 = HintImage;
     Image.NightMark = nightImage;
     Image.SleepDog = sleepdog;
     Image.DogRuns = dogruns;
+    Image.Busted = Busted;
 }
 
 void WOZ_INIT(WALL_OBJECTS_ZONE &woz, Graphics &graphics){
@@ -92,7 +97,6 @@ void WOZ_INIT(WALL_OBJECTS_ZONE &woz, Graphics &graphics){
     vector<ZONE> vungchelap = VCLInit();
     ZONE vcd("vungchoduoi", 320, 0, 320, 737);
     ZONE hint("hint", 256, 256, 32, 32);
-    vector<ZONE> escape = EscapeInit();
 
     woz.hint = hint;
     woz.objects = objects;
@@ -117,11 +121,11 @@ void SPRITE_CHARACTER_INIT(Graphics &graphics, SPRITE_CHARACTER &Sprite_Robber){
 
 }
 
-void DRAW_BACKGROUND_OBJECTS(TILEMAP &TileMap, Graphics &graphics){
-    SDL_RenderClear(graphics.renderer);
-    graphics.drawTileMap(TileMap.BackGround, TileMap.tilesetImage);
-    graphics.drawTileMap(TileMap.OI1, TileMap.tilesetImage);
-    graphics.drawTileMap(TileMap.OI2, TileMap.tilesetImage);
+void DRAW_BACKGROUND_OBJECTS(TILEMAP &TileMap){
+    SDL_RenderClear(TileMap.graphics.renderer);
+    TileMap.graphics.drawTileMap(TileMap.BackGround, TileMap.tilesetImage);
+    TileMap.graphics.drawTileMap(TileMap.OI1, TileMap.tilesetImage);
+    TileMap.graphics.drawTileMap(TileMap.OI2, TileMap.tilesetImage);
 
 }
 
@@ -161,27 +165,27 @@ void DRAW_CAMERA(TILEMAP &TileMap, Graphics &graphics){
 
 }
 
-void DRAW_LAYER2(TILEMAP &TileMap, Graphics &graphics, IMAGE &Image){
+void DRAW_LAYER2(TILEMAP &TileMap, IMAGE &Image){
         SDL_SetTextureAlphaMod(TileMap.tilesetImage, 100);
-        graphics.drawTileMap(TileMap.Layer2, TileMap.tilesetImage);
+        TileMap.graphics.drawTileMap(TileMap.Layer2, TileMap.tilesetImage);
         SDL_SetTextureAlphaMod(TileMap.tilesetImage, 255);
 
-        DRAW_CAMERA(TileMap, graphics);
+        DRAW_CAMERA(TileMap, TileMap.graphics);
 
-        graphics.renderTexture(Image.NightMark, 0, 0);
+        Image.graphics.renderTexture(Image.NightMark, 0, 0);
 
 }
 
-void CHECK_HINT(Mouse &mouse, WALL_OBJECTS_ZONE &woz, IMAGE &Image, Graphics &graphics){
+void CHECK_HINT(Mouse &mouse, WALL_OBJECTS_ZONE &woz, IMAGE &Image){
     const Uint8* KeyE = SDL_GetKeyboardState(NULL);
     if(Collision3(mouse, woz.hint)){
         if (KeyE[SDL_SCANCODE_E]){
-            graphics.renderTexture(Image.Hint1, 300, 0);
+            Image.graphics.renderTexture(Image.Hint1, 300, 0);
         }
     }
 }
 
-void CHECK_DOGCHASE(Mouse &mouse, DOG &dog, IMAGE &Image, Graphics &graphics, ZONE &vcd){
+void CHECK_DOGCHASE(Mouse &mouse, DOG &dog, IMAGE &Image, ZONE &vcd, BOOL &b){
         const Uint8* KeySlow = SDL_GetKeyboardState(NULL);
         if (dog.dogchase == 0){
             if (Collision3(mouse, vcd)){
@@ -194,23 +198,32 @@ void CHECK_DOGCHASE(Mouse &mouse, DOG &dog, IMAGE &Image, Graphics &graphics, ZO
             if (Collision3(mouse, vcd) && !Collision3(mouse, dog)){
                 dog.DogRun.tickdog(dog.prevTicksForDogRun);
                 updateDogPosition(mouse, dog);
-                graphics.render(dog.x, dog.y, dog.DogRun, dog.right);
+                Image.graphics.render(dog.x, dog.y, dog.DogRun, dog.right);
 
             }else{
-                graphics.renderTexture(Image.DogImage, dog.x, dog.y);
+                Image.graphics.renderTexture(Image.DogImage, dog.x, dog.y);
+
+                if(Collision3(mouse, dog)){
+                    Image.graphics.renderTexture(Image.Busted, 0, 0);
+                    Image.graphics.presentScene();
+                    SDL_Delay(3000);
+
+                    b.gamePlay = 0;
+                    b.menu = 1;
+                }
             }
         }else{
-            graphics.renderTexture(Image.SleepDog, 322, 465);
+            Image.graphics.renderTexture(Image.SleepDog, 322, 465);
         }
 }
 
-void COLLISION_INTERACT(Mouse &mouse, TILEMAP &TileMap, WALL_OBJECTS_ZONE &woz, IMAGE &Image, Graphics &graphics ){
+void COLLISION_INTERACT(Mouse &mouse, TILEMAP &TileMap, WALL_OBJECTS_ZONE &woz, IMAGE &Image){
     CheckBorder(mouse);
     CheckCollisionWall(mouse, woz.walls);
 
     const Uint8* Keyy = SDL_GetKeyboardState(NULL);
     CheckCollisionObjects(mouse, woz.objects, Keyy, TileMap);
-    CheckCollisionObjectsToRender(mouse, woz.vungchelap, graphics, TileMap);
+    CheckCollisionObjectsToRender(mouse, woz.vungchelap, Image.graphics, TileMap);
 
     CheckCollisionCamera(mouse, woz.camerascan, TileMap.cn);
 
@@ -227,23 +240,21 @@ void GamePlay(BOOL &b, Graphics &graphics){
 
     TILEMAP TileMap;
     TILEMAP_INIT(TileMap, graphics);
-
     SPRITE_CHARACTER Sprite_Robber;
     SPRITE_CHARACTER_INIT(graphics, Sprite_Robber);
-
     IMAGE Image;
     IMAGE_INIT(Image, graphics);
-
     WALL_OBJECTS_ZONE woz;
     WOZ_INIT(woz, graphics);
-
     DOG dog;
     DOG_INIT(Image, dog);
-
     SDL_Event event;
 
     Mix_Music *gMusic = graphics.loadMusic("Music\\sneaky_feet.mp3");
     graphics.play(gMusic);
+
+    double countdownTimer = INITIAL_COUNTDOWN_TIMER;
+    Uint32 prevTicks = SDL_GetTicks();
 
     while(b.gamePlay){
         while (SDL_PollEvent(&event)) {
@@ -253,17 +264,28 @@ void GamePlay(BOOL &b, Graphics &graphics){
             }
         }
 
-        DRAW_BACKGROUND_OBJECTS(TileMap, graphics);
+        Uint32 currentTicks = SDL_GetTicks();
+        Uint32 deltaTime = currentTicks - prevTicks;
+        prevTicks = currentTicks;
+
+        countdownTimer -= deltaTime;
+
+        if (countdownTimer <= 0) {
+            b.gamePlay = false;
+            b.menu = true;
+        }
+
+        DRAW_BACKGROUND_OBJECTS(TileMap);
 
         CHARACTER_MOVE(mouse, graphics, Sprite_Robber);
 
-        COLLISION_INTERACT(mouse, TileMap, woz, Image, graphics);
+        COLLISION_INTERACT(mouse, TileMap, woz, Image);
 
-        CHECK_DOGCHASE(mouse, dog, Image, graphics, woz.vungchoduoi);
+        CHECK_DOGCHASE(mouse, dog, Image, woz.vungchoduoi, b);
 
-        DRAW_LAYER2(TileMap, graphics, Image);
+        DRAW_LAYER2(TileMap, Image);
 
-        CHECK_HINT(mouse, woz, Image, graphics);
+        CHECK_HINT(mouse, woz, Image);
 
         graphics.presentScene();
 
@@ -289,7 +311,6 @@ int main(int argc, char* argv[])
     while (!b.quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) b.quit = true;
-
         }
 
         if(b.menu){

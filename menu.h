@@ -38,6 +38,7 @@ struct DOG{
 
 
 struct TILEMAP{
+    Graphics graphics;
     SDL_Texture* tilesetImage;
     vector<vector<int>> OI1;
     vector<vector<int>> OI1CP;
@@ -66,21 +67,24 @@ struct TILEMAP{
 };
 
 struct IMAGE{
+    Graphics graphics;
     SDL_Texture* SleepDog;
     SDL_Texture* DogImage;
     SDL_Texture* NightMark;
     SDL_Texture* Hint1;
     SDL_Texture* DogRuns;
-
+    SDL_Texture* Busted;
 };
 
 struct MENU_IMAGE{
     Graphics graphics;
     SDL_Texture* MenuBackground;
     SDL_Texture* ButtonMap;
+
 };
 
 struct WALL_OBJECTS_ZONE{
+    Graphics graphics;
     vector<WALL> walls;
     vector<OBJECTS> objects;
     vector<ZONE> vungchelap;
