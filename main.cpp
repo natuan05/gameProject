@@ -24,7 +24,7 @@ void DRAW_MENU(MENU_IMAGE &MImage){
     MImage.graphics.presentScene();
 }
 
-void RunMenu(BOOL &b, Graphics &graphics){
+void RunMenu(BOOL &b, Graphics &graphics, FONT &Font){
 
     MENU_IMAGE MImage;
     MENU_IMAGE_INIT(graphics, MImage);
@@ -166,13 +166,17 @@ void DRAW_CAMERA(TILEMAP &TileMap, Graphics &graphics){
 }
 
 void DRAW_LAYER2(TILEMAP &TileMap, IMAGE &Image){
-        SDL_SetTextureAlphaMod(TileMap.tilesetImage, 100);
-        TileMap.graphics.drawTileMap(TileMap.Layer2, TileMap.tilesetImage);
-        SDL_SetTextureAlphaMod(TileMap.tilesetImage, 255);
 
-        DRAW_CAMERA(TileMap, TileMap.graphics);
 
-        Image.graphics.renderTexture(Image.NightMark, 0, 0);
+    SDL_SetTextureAlphaMod(TileMap.tilesetImage, 100);
+    TileMap.graphics.drawTileMap(TileMap.Layer2, TileMap.tilesetImage);
+    SDL_SetTextureAlphaMod(TileMap.tilesetImage, 255);
+
+    TileMap.graphics.drawTileMap(TileMap.OI2, TileMap.tilesetImage);
+
+    DRAW_CAMERA(TileMap, TileMap.graphics);
+
+    Image.graphics.renderTexture(Image.NightMark, 0, 0);
 
 }
 
@@ -254,7 +258,7 @@ void UPDATE_TIME(TIME &GameplayTime, BOOL &b, IMAGE &Image, TTF_Font* font, cons
     Image.TimeText = Image.graphics.renderText(timeStr.c_str(), font, textColor);
 }
 
-void GamePlay(BOOL &b, Graphics &graphics){
+void GamePlay(BOOL &b, Graphics &graphics, FONT &Font){
     Mouse mouse;
 
     TILEMAP TileMap;
@@ -277,12 +281,7 @@ void GamePlay(BOOL &b, Graphics &graphics){
     Mix_Music *gMusic = graphics.loadMusic("Music\\sneaky_feet.mp3");
     graphics.play(gMusic);
 
-    TTF_Font* font = graphics.loadFont("font\\VT323-Regular.ttf", 50);
-    SDL_Color textColor = {255, 255, 255, 255};
 
-//    double countdownTimer = INITIAL_COUNTDOWN_TIMER;
-//    Uint32 prevTicks = SDL_GetTicks();
-//
     TIME GameplayTime;
 
     while(b.gamePlay){
@@ -292,7 +291,7 @@ void GamePlay(BOOL &b, Graphics &graphics){
                 b.quit = 1;
             }
         }
-        UPDATE_TIME(GameplayTime, b, Image, font, textColor);
+        UPDATE_TIME(GameplayTime, b, Image, Font.font1, Font.textColor);
 
         DRAW_BACKGROUND_OBJECTS(TileMap);
 
@@ -318,16 +317,26 @@ void GamePlay(BOOL &b, Graphics &graphics){
 
 }
 
+void FONT_INIT(FONT &Font, Graphics &graphics){
+    Font.font1 = graphics.loadFont("font\\VT323-Regular.ttf", 50);
+    Font.textColor = {255, 255, 255, 255};
+}
+
 int main(int argc, char* argv[])
 {
+    Graphics graphics;
+    graphics.init();
+
     BOOL b;
     b.quit = 0;
     b.gamePlay = 0;
     b.menu = 1;
+
+    FONT Font;
+    FONT_INIT(Font, graphics);
+
     SDL_Event event;
 
-    Graphics graphics;
-    graphics.init();
 
     while (!b.quit) {
         while (SDL_PollEvent(&event)) {
@@ -335,9 +344,9 @@ int main(int argc, char* argv[])
         }
 
         if(b.menu){
-            RunMenu(b, graphics);
+            RunMenu(b, graphics, Font);
         }else if(b.gamePlay){
-            GamePlay(b, graphics);
+            GamePlay(b, graphics, Font);
         }
 
     }

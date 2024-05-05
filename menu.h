@@ -106,4 +106,9 @@ struct TIME{
     Uint32 prevTicks = SDL_GetTicks();
 };
 
+struct FONT{
+    TTF_Font* font1;
+    SDL_Color textColor;
+};
+
 #endif // MENU_H_INCLUDED
