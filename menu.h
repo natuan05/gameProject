@@ -44,6 +44,7 @@ struct TILEMAP{
     vector<vector<int>> OI1CP;
     vector<vector<int>> OI2;
     vector<vector<int>> OI2CP;
+    vector<vector<int>> OI3;
 
     vector<vector<int>> BackGround;
     vector<vector<int>> Layer2;
@@ -68,19 +69,22 @@ struct TILEMAP{
 
 struct IMAGE{
     Graphics graphics;
-    SDL_Texture* SleepDog;
-    SDL_Texture* DogImage;
-    SDL_Texture* NightMark;
-    SDL_Texture* Hint1;
-    SDL_Texture* DogRuns;
-    SDL_Texture* Busted;
-    SDL_Texture* TimeText;
+    SDL_Texture* SleepDog =  nullptr;
+    SDL_Texture* DogImage=  nullptr;
+    SDL_Texture* NightMark=  nullptr;
+    SDL_Texture* Hint1=  nullptr;
+    SDL_Texture* DogRuns=  nullptr;
+    SDL_Texture* Busted=  nullptr;
+    SDL_Texture* TimeText=  nullptr;
+    SDL_Texture* MoneyText =  nullptr;
+    SDL_Texture* MissionComplete = nullptr;
 };
 
 struct MENU_IMAGE{
     Graphics graphics;
-    SDL_Texture* MenuBackground;
-    SDL_Texture* ButtonMap;
+    SDL_Texture* MenuBackground =  nullptr;
+    SDL_Texture* ButtonMap =  nullptr;
+    SDL_Texture* MoneyText  =  nullptr;
 
 };
 
@@ -93,6 +97,7 @@ struct WALL_OBJECTS_ZONE{
 
     ZONE vungchoduoi;
     ZONE hint;
+    ZONE GetInCar;
 };
 
 struct BUTTONS{
@@ -107,8 +112,20 @@ struct TIME{
 };
 
 struct FONT{
-    TTF_Font* font1;
+    TTF_Font* font1 =  nullptr;
     SDL_Color textColor;
 };
 
+struct BAG{
+    int money = 0;
+
+};
+
+struct SOUND{
+    Graphics graphics;
+    Mix_Music *background_music = nullptr;
+    Mix_Chunk *dog_barking = nullptr;
+    Mix_Chunk *tada = nullptr;
+    Mix_Chunk *cash_register = nullptr;
+};
 #endif // MENU_H_INCLUDED

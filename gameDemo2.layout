@@ -2,53 +2,54 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="menu.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="graphics.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1952" topLine="73" />
+			<Cursor1 position="5976" topLine="176" />
 		</Cursor>
 	</File>
-	<File name="game.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+	<File name="menu.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4490" topLine="142" />
+			<Cursor1 position="2339" topLine="1" />
 		</Cursor>
+	</File>
+	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1263" topLine="30" />
+		</Cursor>
+		<Folding>
+			<Collapse line="120" />
+			<Collapse line="165" />
+			<Collapse line="251" />
+		</Folding>
 	</File>
 	<File name="Objects.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="683" topLine="19" />
+			<Cursor1 position="1997" topLine="93" />
 		</Cursor>
-	</File>
-	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="663" topLine="0" />
-		</Cursor>
-		<Folding>
-			<Collapse line="131" />
-			<Collapse line="153" />
-		</Folding>
 	</File>
 	<File name="def.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="517" topLine="0" />
+			<Cursor1 position="238" topLine="6" />
 		</Cursor>
 	</File>
 	<File name="Interact.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4442" topLine="48" />
+			<Cursor1 position="3593" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="graphics.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="menu_processing.h" open="1" top="1" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="7913" topLine="222" />
+			<Cursor1 position="898" topLine="10" />
+		</Cursor>
+	</File>
+	<File name="game.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="6422" topLine="168" />
 		</Cursor>
 	</File>
 	<File name="Map.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="menu_processing.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="711" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

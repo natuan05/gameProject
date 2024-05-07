@@ -177,42 +177,40 @@ void CheckCollisionWall(Mouse &mouse, vector<WALL> &walls) {
     }
 }
 
-void CheckNameObject(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
-    if(ob.name == "singlesofa1") InteractX_X1(ob, Key, fullObjectsImage);
-    if(ob.name == "singlesofa2") InteractX_X1(ob, Key, fullObjectsImage);
-    if(ob.name == "doublesofa") InteractY_Y1(ob, Key, fullObjectsImage);
-    if(ob.name == "clock") InteractY0_Y(ob, Key, fullObjectsImage);
-    if(ob.name == "table") InteractXX1_YY1(ob, Key, fullObjectsImage);
-
+void CheckNameObject(OBJECTS &ob, TILEMAP &fullObjectsImage, BAG &Bag){
+    const Uint8* Key = SDL_GetKeyboardState(NULL);
+    if (Key[SDL_SCANCODE_E]){
+        Bag.money += ob.cost;
+        ob.cost = 0;
+    }
 }
 
-void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, const Uint8* Keyy, TILEMAP &fullObjectsImage){
+void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, TILEMAP &fullObjectsImage, BAG &Bag){
 
         for (auto &ob : objects){
             if (ob.exist){
                 if (Collision2(mouse, ob)== 1){
                     mouse.x = ob.x - 32;
-                    CheckNameObject(ob, Keyy, fullObjectsImage);
+                    CheckNameObject(ob,  fullObjectsImage, Bag);
                 }
                 if (Collision2(mouse, ob)== 2){
                     mouse.x = ob.x + ob.w;
-                    CheckNameObject(ob, Keyy, fullObjectsImage);
+                    CheckNameObject(ob,  fullObjectsImage, Bag);
                 }
                 if (Collision2(mouse, ob)== 3){
                     mouse.y = ob.y - 32;
-                    CheckNameObject(ob, Keyy, fullObjectsImage);
+                    CheckNameObject(ob,  fullObjectsImage, Bag);
                 }
                 if (Collision2(mouse, ob)== 4){
                     mouse.y = ob.y + ob.h - 32;
-                    CheckNameObject(ob, Keyy, fullObjectsImage);
+                    CheckNameObject(ob,  fullObjectsImage, Bag);
                 }
             }else{
                 if (Collision3(mouse, ob)== 1){
-                    CheckNameObject(ob, Keyy, fullObjectsImage);
+                    CheckNameObject(ob,  fullObjectsImage, Bag);
                 }
 
             }
-
 
         }
 
@@ -245,10 +243,12 @@ void CheckCollisionCamera(Mouse &mouse, const vector<ZONE> &camerascan, const bo
 }
 
 void CheckNameVCL(const ZONE vcl, Graphics &graphics, const TILEMAP &fullObjectsImage){
-    if (vcl.name == "v1") VCL1(vcl, graphics, fullObjectsImage);
-    if (vcl.name == "v2") VCL2(vcl, graphics, fullObjectsImage);
-    if (vcl.name == "v3") VCL3(vcl, graphics, fullObjectsImage);
-    if (vcl.name == "v4") VCL4(vcl, graphics, fullObjectsImage);
+    if (vcl.name == "v1") VungCheKhuat_xy_OI1(vcl, graphics, fullObjectsImage);
+    if (vcl.name == "v2") VungCheKhuat_xx1y_OI1(vcl, graphics, fullObjectsImage);
+    if (vcl.name == "v3") VungCheKhuat_xyy1_OI1(vcl, graphics, fullObjectsImage);
+    if (vcl.name == "v4") VungCheKhuat_xx1yy1_OI1(vcl, graphics, fullObjectsImage);
+    if (vcl.name == "v4_OI2") VungCheKhuat_xx1yy1_OI2(vcl, graphics, fullObjectsImage);
+
 }
 
 
