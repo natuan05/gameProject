@@ -94,34 +94,36 @@ vector <WALL> WallInit(){
 
 vector<OBJECTS> ObjectsInit(){
     vector<OBJECTS> ob;
-    ob.emplace_back("singlesofa1", 200, 3, 717, 237, 38, 19);
-    ob.emplace_back("singlesofa2", 200, 3, 717, 142, 38, 18);
+    ob.emplace_back("singlesofa1", 20, 3, 717, 237, 38, 19);
+    ob.emplace_back("singlesofa2", 25, 3, 717, 142, 38, 18);
     ob.emplace_back("doublesofa", 50, 0, 672.25, 173, 31.75, 50.73);
-    ob.emplace_back("table", 20, 0, 720, 179, 32, 34);
-    ob.emplace_back("fireplace", 0, 0, 768, 96, 64, 32);
-    ob.emplace_back("clock", 0, 0, 672, 96, 32, 32);
+    ob.emplace_back("table", 10, 0, 720, 179, 32, 34);
+    ob.emplace_back("fireplace", 5, 0, 768, 96, 64, 32);
+    ob.emplace_back("clock", 20, 0, 672, 96, 32, 32);
     ob.emplace_back("TableTv", 0, 0, 832, 160, 27, 64);
-    ob.emplace_back("washstand1", 0, 0, 931, 448, 26.75, 15.25);
+    ob.emplace_back("Tv", 0, 0, 832, 160, 27, 64);
+    ob.emplace_back("washstand1", 5, 0, 931, 448, 26.75, 15.25);
     ob.emplace_back("washstand2", 0, 0, 899, 576, 26.75, 15.25);
-    ob.emplace_back("bathtub1", 0, 0, 864, 512, 64, 32);
-    ob.emplace_back("bathtub2", 0, 0, 896, 640, 64, 32);
-    ob.emplace_back("Table2", 0, 0, 864, 96, 32, 32);
-    ob.emplace_back("pots1", 0, 0, 675, 300, 26, 18);
-    ob.emplace_back("pots2", 0, 0, 867, 300, 26, 18);
-    ob.emplace_back("kennel", 0, 0, 322, 465, 28, 15);
+    ob.emplace_back("bathtub1", 10, 0, 864, 512, 64, 32);
+    ob.emplace_back("bathtub2", 50, 0, 896, 640, 64, 32);
+    ob.emplace_back("Table2", 5, 0, 864, 96, 32, 32);
+    ob.emplace_back("pots1", 10, 0, 675, 300, 26, 18);
+    ob.emplace_back("pots2", 50, 0, 867, 300, 26, 18);
+    ob.emplace_back("kennel", 30, 0, 322, 465, 28, 15);
     ob.emplace_back("truck", 0, 0, 160, 32, 64, 128);
-    ob.emplace_back("Bep", 0, 0, 672, 640, 159, 32);
-    ob.emplace_back("BanAn", 0, 0, 704, 538.73, 96, 47.63);
-    ob.emplace_back("TableTv2", 0, 0, 1058.75, 512, 27.75, 64);
-    ob.emplace_back("bed", 0, 0, 1152, 510, 64, 65);
-    ob.emplace_back("bookshelfmini", 0, 0, 1120, 640, 96, 32);
-    ob.emplace_back("Ke", 0, 0, 1195, 486, 21, 27);
-    ob.emplace_back("wardrobe", 0, 0, 992, 544, 17, 128);
-    ob.emplace_back("bookshelf1", 0, 0, 928, 220, 128, 22);
-    ob.emplace_back("bookshelf2", 0, 0, 1088, 220, 128, 22);
+    ob.emplace_back("Bep", 70, 0, 672, 640, 159, 32);
+    ob.emplace_back("BanAn", 30, 0, 704, 538.73, 96, 47.63);
+    ob.emplace_back("TableTv2", 50, 0, 1058.75, 512, 27.75, 64);
+    ob.emplace_back("Tv2", 50, 0, 1058.75, 512, 27.75, 64);
+    ob.emplace_back("bed", 50, 0, 1152, 510, 64, 65);
+    ob.emplace_back("bookshelfmini", 100, 0, 1120, 640, 96, 32);
+    ob.emplace_back("Ke", 100, 0, 1195, 486, 21, 27);
+    ob.emplace_back("wardrobe", 150, 0, 992, 544, 17, 128);
+    ob.emplace_back("bookshelf1", 20, 0, 928, 220, 128, 22);
+    ob.emplace_back("bookshelf2", 50, 0, 1088, 220, 128, 22);
     ob.emplace_back("bookshelf3", 0, 0, 928, 157, 128, 21);
     ob.emplace_back("bookshelf4", 0, 0, 1088, 157, 128, 20);
-    ob.emplace_back("phonograph", 0, 0, 672, 147, 32, 14);
+    ob.emplace_back("phonograph", 200, 0, 672, 147, 32, 14);
     return ob;
 }
 

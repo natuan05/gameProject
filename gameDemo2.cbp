@@ -39,8 +39,8 @@
 		<Unit filename="game.h" />
 		<Unit filename="graphics.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="menu.h" />
 		<Unit filename="menu_processing.h" />
+		<Unit filename="structs.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

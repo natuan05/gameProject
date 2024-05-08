@@ -1,5 +1,5 @@
-#ifndef MENU_H_INCLUDED
-#define MENU_H_INCLUDED
+#ifndef STRUCTS_H_INCLUDED
+#define STRUCTS_H_INCLUDED
 
 #include "def.h"
 #include "graphics.h"
@@ -44,7 +44,6 @@ struct TILEMAP{
     vector<vector<int>> OI1CP;
     vector<vector<int>> OI2;
     vector<vector<int>> OI2CP;
-    vector<vector<int>> OI3;
 
     vector<vector<int>> BackGround;
     vector<vector<int>> Layer2;
@@ -127,5 +126,9 @@ struct SOUND{
     Mix_Chunk *dog_barking = nullptr;
     Mix_Chunk *tada = nullptr;
     Mix_Chunk *cash_register = nullptr;
+};
+
+struct CAR{
+
 };
 #endif // MENU_H_INCLUDED

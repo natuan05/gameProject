@@ -4,7 +4,7 @@
 #include "def.h"
 #include "Map.h"
 #include "graphics.h"
-#include "menu.h"
+#include "structs.h"
 
 void InteractX_X1(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
     int row= (ob.y)/TILE_HEIGHT;
@@ -68,12 +68,39 @@ void InteractY0_Y(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
             ob.exist = 1;
             fullObjectsImage.OI1[row-1][col] = fullObjectsImage.OI1CP[row-1][col];
             fullObjectsImage.OI1[row][col] = fullObjectsImage.OI1CP[row][col];
+
         }
 
     }
 
+}
+
+
+void InteractY0_Y_Y1_OI2(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
+    int row= (ob.y)/TILE_HEIGHT;
+    int col= (ob.x)/TILE_WIDTH;
+
+    if (ob.exist){
+        if (Key[SDL_SCANCODE_E]){
+            ob.exist = 0;
+            fullObjectsImage.OI2[row-1][col] = -1;
+            fullObjectsImage.OI2[row][col] = -1;
+            fullObjectsImage.OI2[row+1][col] = -1;
+        }
+
+    }else{
+        if (Key[SDL_SCANCODE_R]){
+            ob.exist = 1;
+            fullObjectsImage.OI2[row-1][col] = fullObjectsImage.OI2CP[row-1][col];
+            fullObjectsImage.OI2[row][col] = fullObjectsImage.OI2CP[row][col];
+            fullObjectsImage.OI2[row+1][col] = fullObjectsImage.OI2CP[row+1][col];
+        }
+
+    }
 
 }
+
+
 void InteractXX1_YY1(OBJECTS &ob, const Uint8* Key, TILEMAP &fullObjectsImage){
     int row= (ob.y)/TILE_HEIGHT;
     int col= (ob.x)/TILE_WIDTH;

@@ -5,7 +5,7 @@
 #include "Objects.h"
 #include "Interact.h"
 #include "graphics.h"
-#include "menu.h"
+#include "structs.h"
 
 void MENU_BUTTONS_INIT(BUTTONS &Buttons){
     ZONE M("Mapbutton", 156, 126, 320, 110);

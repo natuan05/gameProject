@@ -3,14 +3,14 @@
 #include "game.h"
 #include "Map.h"
 #include "Objects.h"
-#include "menu.h"
+#include "structs.h"
 #include "menu_processing.h"
 
 using namespace std;
 
 void MENU_IMAGE_INIT(Graphics &graphics, MENU_IMAGE &MImage){
     SDL_Texture* menubackground = graphics.loadTexture("img\\menubackground.png");
-    SDL_Texture* ButtonMap = graphics.loadTexture("img\\PressMapButton.png");
+    SDL_Texture* ButtonMap = graphics.loadTexture("img\\MapButton.png");
 
     MImage.graphics = graphics;
     MImage.MenuBackground = menubackground;
@@ -31,7 +31,6 @@ void TILEMAP_INIT(TILEMAP &TileMap, Graphics &graphics){
     vector<vector<int>> Layer2 = loadTileMapFromCSV("Map\\gameDemo2_Layer2.csv");
     vector<vector<int>> ObjectsTile1 = loadTileMapFromCSV("Map\\gameDemo2_Objects.csv");
     vector<vector<int>> ObjectsTile2 = loadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
-    vector<vector<int>> ObjectsTile3 = loadTileMapFromCSV("Map\\gameDemo2_Objects3.csv");
 
     vector<vector<int>> Camera1 = loadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
     vector<vector<int>> Camera2 = loadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
@@ -39,7 +38,6 @@ void TILEMAP_INIT(TILEMAP &TileMap, Graphics &graphics){
 
     TileMap.graphics = graphics;
     TileMap.init(tilesetImage, ObjectsTile1, ObjectsTile2);
-    TileMap.OI3 = ObjectsTile3;
     TileMap.BackGround = BackGround;
     TileMap.Camera1 = Camera1;
     TileMap.Camera2 = Camera2;
@@ -105,7 +103,6 @@ void DRAW_BACKGROUND_OBJECTS(TILEMAP &TileMap){
     TileMap.graphics.drawTileMap(TileMap.BackGround, TileMap.tilesetImage);
     TileMap.graphics.drawTileMap(TileMap.OI1, TileMap.tilesetImage);
     TileMap.graphics.drawTileMap(TileMap.OI2, TileMap.tilesetImage);
-    TileMap.graphics.drawTileMap(TileMap.OI3, TileMap.tilesetImage);
 }
 
 void CHARACTER_MOVE(Mouse &mouse, Graphics &graphics, SPRITE_CHARACTER &Sprite_Robber){
@@ -162,15 +159,22 @@ void SOUND_DELETE(SOUND &gameSound){
     Mix_FreeChunk(gameSound.dog_barking);
 }
 
-void CHECK_HINT_ESCAPE(Mouse &mouse, WALL_OBJECTS_ZONE &woz, IMAGE &Image, BOOL &b, SOUND &gameSound){
+void CHECK_HINT(Mouse &mouse, WALL_OBJECTS_ZONE &woz, IMAGE &Image){
     const Uint8* KeyE = SDL_GetKeyboardState(NULL);
     if(Collision3(mouse, woz.hint)){
         if (KeyE[SDL_SCANCODE_E]){
             Image.graphics.renderTexture(Image.Hint1, 300, 0);
         }
     }
+
+}
+
+void _ESCAPE(Mouse &mouse, WALL_OBJECTS_ZONE &woz, IMAGE &Image, BOOL &b, SOUND &gameSound, BAG &Bag, BAG &Bag_Menu){
+    const Uint8* KeyE = SDL_GetKeyboardState(NULL);
     if(Collision3(mouse, woz.GetInCar)){
         if (KeyE[SDL_SCANCODE_E]){
+            Bag_Menu.money += Bag.money;
+
             Image.graphics.renderTexture(Image.MissionComplete, 0, 0);
             Image.graphics.presentScene();
             Image.graphics.play(gameSound.tada);
@@ -202,28 +206,23 @@ void CHECK_DOGCHASE(Mouse &mouse, DOG &dog, IMAGE &Image, ZONE &vcd, BOOL &b, Mi
             }else{
                 Image.graphics.renderTexture(Image.DogImage, dog.x, dog.y);
 
-//                if(Collision3(mouse, dog)){
-//                    Image.graphics.renderTexture(Image.Busted, 0, 0);
-//                    Image.graphics.presentScene();
-//                    SDL_Delay(3000);
-//
-//                    b.gamePlay = 0;
-//                    b.menu = 1;
-//                }
+                if(Collision3(mouse, dog)){
+                    Busted_Out(Image, b);
+                }
             }
         }else{
             Image.graphics.renderTexture(Image.SleepDog, 322, 465);
         }
 }
 
-void COLLISION_INTERACT(Mouse &mouse, TILEMAP &TileMap, WALL_OBJECTS_ZONE &woz, IMAGE &Image, BAG &Bag){
+void COLLISION_INTERACT(Mouse &mouse, TILEMAP &TileMap, WALL_OBJECTS_ZONE &woz, IMAGE &Image, BAG &Bag, BOOL &b){
     CheckBorder(mouse);
     CheckCollisionWall(mouse, woz.walls);
 
     CheckCollisionObjects(mouse, woz.objects, TileMap, Bag);
     CheckCollisionObjectsToRender(mouse, woz.vungchelap, Image.graphics, TileMap);
 
-    CheckCollisionCamera(mouse, woz.camerascan, TileMap.cn);
+    CheckCollisionCamera(mouse, woz.camerascan, TileMap.cn, Image, b);
 
 }
 
@@ -276,7 +275,6 @@ void RENDER_TEXT(IMAGE &Image, BAG &Bag, FONT &Font){
 }
 
 void RunMenu(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
-
     MENU_IMAGE MImage;
     MENU_IMAGE_INIT(graphics, MImage);
 
@@ -301,7 +299,7 @@ void RunMenu(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
 
         string moneyStr = "$:" + to_string(Bag_Menu.money);
         MImage.MoneyText = MImage.graphics.renderText(moneyStr.c_str(), Font.font1, Font.textColor);
-        graphics.renderTexture(MImage.MoneyText, 10, 60);
+        graphics.renderTexture(MImage.MoneyText, 10, 10);
 
         graphics.presentScene();
 
@@ -353,13 +351,15 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
 
         CHARACTER_MOVE(mouse, graphics, Sprite_Robber);
 
-        COLLISION_INTERACT(mouse, TileMap, woz, Image, Bag);
+        COLLISION_INTERACT(mouse, TileMap, woz, Image, Bag, b);
 
         CHECK_DOGCHASE(mouse, dog, Image, woz.vungchoduoi, b, gameSound.dog_barking);
 
         DRAW_LAYER2(TileMap, Image);
 
-        CHECK_HINT_ESCAPE(mouse, woz, Image, b, gameSound);
+        CHECK_HINT(mouse, woz, Image);
+
+        _ESCAPE(mouse, woz, Image, b, gameSound, Bag, Bag_Menu);
 
         RENDER_TEXT(Image, Bag, Font);
 
@@ -370,6 +370,7 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
     }
 
     SOUND_DELETE(gameSound);
+
 
 }
 

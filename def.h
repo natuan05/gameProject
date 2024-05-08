@@ -64,4 +64,7 @@ const int DOGRUN_CLIPS[][4]={
 };
 const int DOGRUN_FRAMES = sizeof(DOGRUN_CLIPS)/sizeof(int)/4;
 
+
+const double START_X = 224;
+const double START_Y = 64;
 #endif // _DEFS__H

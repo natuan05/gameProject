@@ -6,14 +6,12 @@
 #include "Objects.h"
 #include "Interact.h"
 #include "graphics.h"
-#include "menu.h"
+#include "structs.h"
 
 struct Mouse {
 
-    double x=   224;
-    double y=  64;
-    double head_w= 32;
-    double head_h= 12;
+    double x=   START_X;
+    double y=  START_Y;
 
     double dx = 0, dy = 0;
     double speed = INITIAL_SPEED;
@@ -117,6 +115,14 @@ void updateDogPosition(Mouse &mouse, DOG &dog) {
         dog.y = mouse.y;
     }
 }
+void Busted_Out(IMAGE &Image, BOOL &b){
+    Image.graphics.renderTexture(Image.Busted, 0, 0);
+    Image.graphics.presentScene();
+    SDL_Delay(3000);
+
+    b.gamePlay = 0;
+    b.menu = 1;
+}
 
 void CheckBorder (Mouse &mouse){
     if ( mouse.x < 0){
@@ -153,7 +159,7 @@ int Collision2(const Mouse &mouse, const OBJECTS &ob){
 
 //Kiem tra ben trong
 int Collision3(const Mouse &mouse, const OBJECTS &ob){
-    if (mouse.x < ob.x + ob.w && mouse.x + 32 > ob.x && mouse.y < ob.y + ob.h -32 && mouse.y + 32 > ob.y) return 1;
+    if (mouse.x <= ob.x + ob.w && mouse.x + 32 >= ob.x && mouse.y <= ob.y + ob.h -32 && mouse.y + 32 >= ob.y) return 1;
     return 0;
 }
 
@@ -179,10 +185,15 @@ void CheckCollisionWall(Mouse &mouse, vector<WALL> &walls) {
 
 void CheckNameObject(OBJECTS &ob, TILEMAP &fullObjectsImage, BAG &Bag){
     const Uint8* Key = SDL_GetKeyboardState(NULL);
-    if (Key[SDL_SCANCODE_E]){
-        Bag.money += ob.cost;
-        ob.cost = 0;
+    if (ob.name == "Tv" ||ob.name == "Tv2"){
+            InteractY0_Y_Y1_OI2(ob, Key, fullObjectsImage );
+    }else{
+        if (Key[SDL_SCANCODE_E]){
+            Bag.money += ob.cost;
+            ob.cost = 0;
+        }
     }
+
 }
 
 void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, TILEMAP &fullObjectsImage, BAG &Bag){
@@ -216,28 +227,21 @@ void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, TILEMAP &full
 
 }
 
-void CheckCollisionCamera(Mouse &mouse, const vector<ZONE> &camerascan, const bool &camnow){
-    if (camnow){
-        for (auto cs : camerascan){
-            if (Collision3(mouse, cs)){
-                if (cs.name == "CamScan1_1") cerr << "nguyhiem";
-                if (cs.name == "CamScan2_1") cerr << "nguyhiem";
-                if (cs.name == "CamScan3_1") cerr << "nguyhiem";
-                if (cs.name == "CamScan4_1") cerr << "nguyhiem";
+void CheckCollisionCamera(Mouse &mouse, const vector<ZONE> &camerascan, const bool &camnow, IMAGE &Image, BOOL &b){
 
+    for (auto cs : camerascan){
+        if (Collision3(mouse, cs)){
+            if (camnow){
+                if (cs.name == "CamScan1_1") Busted_Out(Image, b);
+                if (cs.name == "CamScan2_1") Busted_Out(Image, b);
+                if (cs.name == "CamScan3_1") Busted_Out(Image, b);
+                if (cs.name == "CamScan4_1") Busted_Out(Image, b);
+            }else{
+                if (cs.name == "CamScan1_2") Busted_Out(Image, b);
+                if (cs.name == "CamScan2_2") Busted_Out(Image, b);
+                if (cs.name == "CamScan3_2") Busted_Out(Image, b);
+                if (cs.name == "CamScan4_2") Busted_Out(Image, b);
             }
-
-        }
-    }else{
-        for (auto cs : camerascan){
-            if (Collision3(mouse, cs)){
-                if (cs.name == "CamScan1_2") cerr << "nguyhiem";
-                if (cs.name == "CamScan2_2") cerr << "nguyhiem";
-                if (cs.name == "CamScan3_2") cerr << "nguyhiem";
-                if (cs.name == "CamScan4_2") cerr << "nguyhiem";
-
-            }
-
         }
     }
 }
