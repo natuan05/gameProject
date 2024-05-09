@@ -7,14 +7,6 @@
 #include "graphics.h"
 #include "structs.h"
 
-void MENU_BUTTONS_INIT(BUTTONS &Buttons){
-    ZONE M("Mapbutton", 156, 126, 320, 110);
-    ZONE S("Shopbutton", 156, 500, 320, 110);
-
-    Buttons.Bmap = M;
-    Buttons.Bshop = S;
-}
-
 
 bool In_ButtonMap(const BUTTONS &Buttons){
     int mouseX, mouseY;

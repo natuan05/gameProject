@@ -12,6 +12,41 @@ struct BOOL{
     bool shop = 0;
 };
 
+struct IMAGE{
+    Graphics graphics;
+    SDL_Texture* SleepDog =  nullptr;
+    SDL_Texture* DogImage=  nullptr;
+    SDL_Texture* NightMark=  nullptr;
+    SDL_Texture* Hint1=  nullptr;
+    SDL_Texture* DogRuns=  nullptr;
+    SDL_Texture* Busted=  nullptr;
+    SDL_Texture* TimeText=  nullptr;
+    SDL_Texture* MoneyText =  nullptr;
+    SDL_Texture* MissionComplete = nullptr;
+
+    IMAGE(Graphics &graphics) : graphics(graphics) {
+        Init();
+    }
+
+    ~IMAGE() {
+        FreeResources();
+    }
+
+    void Init() {
+        DogImage = graphics.loadTexture("img\\dog.png");
+        Hint1 = graphics.loadTexture("img\\BeCarefulCamera.png");
+        NightMark = graphics.loadTexture("img\\night.png");
+        SDL_SetTextureAlphaMod(NightMark, 100);
+        SleepDog = graphics.loadTexture("img\\sleepdog.png");
+        DogRuns = graphics.loadTexture(DOGRUN_SPRITE_FILE);
+        Busted = graphics.loadTexture("img\\Busted.png");
+        MissionComplete = graphics.loadTexture("img\\Good.png");
+    }
+
+    void FreeResources();
+
+};
+
 struct SPRITE_CHARACTER{
     Sprite Run;
     Sprite Slow;
@@ -19,6 +54,26 @@ struct SPRITE_CHARACTER{
     Uint32 prevTicksR= SDL_GetTicks();
     Uint32 prevTicksS= SDL_GetTicks();
 
+    SPRITE_CHARACTER(Graphics &graphics) {
+        Init(graphics);
+    }
+
+    ~SPRITE_CHARACTER() {
+        FreeResources();
+    }
+
+
+    void Init(Graphics &graphics) {
+        SDL_Texture* characterRun = graphics.loadTexture(ROBBERRUN_SPRITE_FILE);
+        Run.init(characterRun, ROBBERRUN_FRAMES, ROBBERRUN_CLIPS);
+
+        SDL_Texture* characterSlow = graphics.loadTexture(ROBBERSLOW_SPRITE_FILE);
+        Slow.init(characterSlow, ROBBERSLOW_FRAMES, ROBBERSLOW_CLIPS);
+    }
+
+    void FreeResources() {
+
+    }
 };
 
 struct DOG{
@@ -34,6 +89,14 @@ struct DOG{
     Uint32 prevTicksForDogRun = SDL_GetTicks();
 
     Sprite DogRun;
+
+    DOG(IMAGE &Image) {
+        Init(Image);
+    }
+
+    void Init(IMAGE &Image) {
+        DogRun.init(Image.DogRuns, DOGRUN_FRAMES, DOGRUN_CLIPS);
+    }
 };
 
 
@@ -54,31 +117,29 @@ struct TILEMAP{
     Uint32 prevTicksForCam = SDL_GetTicks();
     bool cn = 1;
 
-    void init(SDL_Texture* _tilesetImage, vector<vector<int>> _OI1, vector<vector<int>> _OI2){
-        tilesetImage = _tilesetImage;
-        OI1 = _OI1;
-        OI2 = _OI2;
-        OI1CP = OI1;
-        OI2CP = OI2;
+    TILEMAP(Graphics &graphics) : graphics(graphics) {
+        init();
     }
 
+    void init() {
+        tilesetImage = graphics.loadTexture("Map\\tilemap.png");
+        OI1 = loadTileMapFromCSV("Map\\gameDemo2_Objects.csv");
+        OI2 = loadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
+        OI1CP = OI1;
+        OI2CP = OI2;
+        BackGround = loadTileMapFromCSV("Map\\gameDemo2_BackGround.csv");
+        Camera1 = loadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
+        Camera2 = loadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
+        CameraNow = Camera1;
+        Layer2 = loadTileMapFromCSV("Map\\gameDemo2_Layer2.csv");
+    }
 
-
-};
-
-struct IMAGE{
-    Graphics graphics;
-    SDL_Texture* SleepDog =  nullptr;
-    SDL_Texture* DogImage=  nullptr;
-    SDL_Texture* NightMark=  nullptr;
-    SDL_Texture* Hint1=  nullptr;
-    SDL_Texture* DogRuns=  nullptr;
-    SDL_Texture* Busted=  nullptr;
-    SDL_Texture* TimeText=  nullptr;
-    SDL_Texture* MoneyText =  nullptr;
-    SDL_Texture* MissionComplete = nullptr;
-
-    void FreeResources();
+    void freeResources() {
+        if (tilesetImage != nullptr) {
+            SDL_DestroyTexture(tilesetImage);
+            tilesetImage = nullptr;
+        }
+    }
 
 };
 
@@ -126,6 +187,32 @@ struct MENU_IMAGE{
     SDL_Texture* ButtonMap =  nullptr;
     SDL_Texture* MoneyText  =  nullptr;
 
+    MENU_IMAGE(Graphics &graphics): graphics(graphics) {
+        init();
+    }
+    ~MENU_IMAGE() {
+        freeResources();
+    }
+
+    void init() {
+        MenuBackground = graphics.loadTexture("img\\menubackground.png");
+        ButtonMap = graphics.loadTexture("img\\MapButton.png");
+    }
+
+    void freeResources() {
+        if (MenuBackground != nullptr) {
+            SDL_DestroyTexture(MenuBackground);
+            MenuBackground = nullptr;
+        }
+        if (ButtonMap != nullptr) {
+            SDL_DestroyTexture(ButtonMap);
+            ButtonMap = nullptr;
+        }
+        if (MoneyText != nullptr) {
+            SDL_DestroyTexture(MoneyText);
+            MoneyText = nullptr;
+        }
+    }
 };
 
 struct WALL_OBJECTS_ZONE{
@@ -138,11 +225,34 @@ struct WALL_OBJECTS_ZONE{
     ZONE vungchoduoi;
     ZONE hint;
     ZONE GetInCar;
+
+
+    WALL_OBJECTS_ZONE() {
+        Init();
+    }
+
+    void Init() {
+        walls = WallInit();
+        objects = ObjectsInit();
+        camerascan = CamScanInit();
+        vungchelap = VCLInit();
+        vungchoduoi = ZONE("vungchoduoi", 320, 0, 320, 737);
+        hint = ZONE("hint", 256, 256, 32, 32);
+        GetInCar = ZONE("", 128, 64, 32, 32);
+    }
 };
 
 struct BUTTONS{
     ZONE Bshop;
     ZONE Bmap;
+
+    BUTTONS(){
+        ZONE M("Mapbutton", 156, 126, 320, 110);
+        ZONE S("Shopbutton", 156, 500, 320, 110);
+
+        Bmap = M;
+        Bshop = S;
+    }
 
 };
 
@@ -154,6 +264,25 @@ struct TIME{
 struct FONT{
     TTF_Font* font1 =  nullptr;
     SDL_Color textColor;
+    FONT(Graphics &graphics) {
+        init(graphics);
+    }
+
+    ~FONT() {
+        freeResources();
+    }
+
+    void init(Graphics &graphics) {
+        font1 = graphics.loadFont("font\\VT323-Regular.ttf", 40);
+        textColor = {255, 255, 255, 255};
+    }
+
+    void freeResources() {
+        if (font1 != nullptr) {
+            TTF_CloseFont(font1);
+            font1 = nullptr;
+        }
+    }
 };
 
 struct BAG{
@@ -162,12 +291,50 @@ struct BAG{
 
 };
 
-struct SOUND{
+struct SOUND {
     Graphics graphics;
     Mix_Music *background_music = nullptr;
     Mix_Chunk *dog_barking = nullptr;
     Mix_Chunk *tada = nullptr;
     Mix_Chunk *cash_register = nullptr;
+
+    SOUND(Graphics &graphics) : graphics(graphics) {
+        Init();
+    }
+
+    ~SOUND() {
+        FreeResources();
+    }
+
+    void Init() {
+        background_music = graphics.loadMusic("Music\\sneaky_feet.mp3");
+        dog_barking = graphics.loadSound("Music\\dog_barking.mp3");
+        tada = graphics.loadSound("Music\\tada.mp3");
+        cash_register = graphics.loadSound("Music\\cash_register.mp3");
+
+        if (dog_barking != nullptr) {
+            Mix_VolumeChunk(dog_barking, 30);
+        }
+    }
+
+    void FreeResources() {
+        if (background_music != nullptr) {
+            Mix_FreeMusic(background_music);
+            background_music = nullptr;
+        }
+        if (dog_barking != nullptr) {
+            Mix_FreeChunk(dog_barking);
+            dog_barking = nullptr;
+        }
+        if (tada != nullptr) {
+            Mix_FreeChunk(tada);
+            tada = nullptr;
+        }
+        if (cash_register != nullptr) {
+            Mix_FreeChunk(cash_register);
+            cash_register = nullptr;
+        }
+    }
 };
 
 struct CAR{
