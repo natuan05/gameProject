@@ -26,14 +26,14 @@ struct OBJECTS{
     string name;
     bool exist = 1;
     int cost;
-    int weight;
+    double weight;
 
     int x;
     int y;
     int w;
     int h;
 
-    OBJECTS (string _name, int _cost,int _weight, int _x, int _y, int _w, int _h ){
+    OBJECTS (string _name, int _cost,double _weight, int _x, int _y, int _w, int _h ){
         name= _name;
         cost = _cost;
         weight= _weight;
@@ -101,12 +101,13 @@ vector<OBJECTS> ObjectsInit(){
     ob.emplace_back("fireplace", 5, 0, 768, 96, 64, 32);
     ob.emplace_back("clock", 20, 0, 672, 96, 32, 32);
     ob.emplace_back("TableTv", 0, 0, 832, 160, 27, 64);
-    ob.emplace_back("Tv", 0, 0, 832, 160, 27, 64);
+    ob.emplace_back("Tv", 600, 0.4, 832, 160, 27, 64);
     ob.emplace_back("washstand1", 5, 0, 931, 448, 26.75, 15.25);
     ob.emplace_back("washstand2", 0, 0, 899, 576, 26.75, 15.25);
     ob.emplace_back("bathtub1", 10, 0, 864, 512, 64, 32);
     ob.emplace_back("bathtub2", 50, 0, 896, 640, 64, 32);
-    ob.emplace_back("Table2", 5, 0, 864, 96, 32, 32);
+    ob.emplace_back("Table2", 0, 0, 864, 96, 32, 32);
+    ob.emplace_back("ancient_vase", 800, 0.6, 864, 96, 32, 32);
     ob.emplace_back("pots1", 10, 0, 675, 300, 26, 18);
     ob.emplace_back("pots2", 50, 0, 867, 300, 26, 18);
     ob.emplace_back("kennel", 30, 0, 322, 465, 28, 15);
@@ -114,7 +115,7 @@ vector<OBJECTS> ObjectsInit(){
     ob.emplace_back("Bep", 70, 0, 672, 640, 159, 32);
     ob.emplace_back("BanAn", 30, 0, 704, 538.73, 96, 47.63);
     ob.emplace_back("TableTv2", 50, 0, 1058.75, 512, 27.75, 64);
-    ob.emplace_back("Tv2", 50, 0, 1058.75, 512, 27.75, 64);
+    ob.emplace_back("Tv2", 600, 0.4, 1058.75, 512, 27.75, 64);
     ob.emplace_back("bed", 50, 0, 1152, 510, 64, 65);
     ob.emplace_back("bookshelfmini", 100, 0, 1120, 640, 96, 32);
     ob.emplace_back("Ke", 100, 0, 1195, 486, 21, 27);
@@ -123,7 +124,7 @@ vector<OBJECTS> ObjectsInit(){
     ob.emplace_back("bookshelf2", 50, 0, 1088, 220, 128, 22);
     ob.emplace_back("bookshelf3", 0, 0, 928, 157, 128, 21);
     ob.emplace_back("bookshelf4", 0, 0, 1088, 157, 128, 20);
-    ob.emplace_back("phonograph", 200, 0, 672, 147, 32, 14);
+    ob.emplace_back("phonograph", 400, 0.3, 672, 147, 32, 14);
     return ob;
 }
 
@@ -169,6 +170,8 @@ vector<ZONE> VCLInit(){
     vcl.emplace_back("v4", 993, 176, 64, 48);
     vcl.emplace_back("v4", 929, 176, 64, 48);
     vcl.emplace_back("v1", 672, 134, 32, 16);
+    vcl.emplace_back("tv", 838, 142, 16, 26);
+    vcl.emplace_back("tv", 1062, 492, 16, 26);
 
     return vcl;
 }

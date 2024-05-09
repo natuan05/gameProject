@@ -52,7 +52,7 @@ const int MS_PER_CAMERA = 3000;
 
 
 //DOG
-const double INITIAL_DOGSPEED= 1.6;
+const double INITIAL_DOGSPEED= 1.3;
 
 const char* DOGRUN_SPRITE_FILE = "img\\dogrun.png";
 const int DOGRUN_CLIPS[][4]={

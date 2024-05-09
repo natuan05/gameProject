@@ -15,7 +15,6 @@ struct Mouse {
 
     double dx = 0, dy = 0;
     double speed = INITIAL_SPEED;
-    double speed2 = (double)speed/(sqrt(2));
 
     bool right = 1;
 
@@ -52,47 +51,48 @@ struct Mouse {
         return (dx != 0 || dy != 0);
     }
 
-    void UpdateDxDy(const Uint8* currentKeyStates);
+    void UpdateDxDy();
 
 
 };
-void Mouse::UpdateDxDy(const Uint8* currentKeyStates){
+void Mouse::UpdateDxDy(){
+    const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 
-        if (currentKeyStates[SDL_SCANCODE_S]) turnSouth();
-        if (currentKeyStates[SDL_SCANCODE_W]) turnNorth();
-        if (currentKeyStates[SDL_SCANCODE_A]) turnWest();
-        if (currentKeyStates[SDL_SCANCODE_D]) turnEast();
+    if (currentKeyStates[SDL_SCANCODE_S]) turnSouth();
+    if (currentKeyStates[SDL_SCANCODE_W]) turnNorth();
+    if (currentKeyStates[SDL_SCANCODE_A]) turnWest();
+    if (currentKeyStates[SDL_SCANCODE_D]) turnEast();
 
-        const int directions[][2] = {
-            {SDL_SCANCODE_W, SDL_SCANCODE_A},
-            {SDL_SCANCODE_W, SDL_SCANCODE_D},
-            {SDL_SCANCODE_S, SDL_SCANCODE_D},
-            {SDL_SCANCODE_S, SDL_SCANCODE_A},
+    const int directions[][2] = {
+        {SDL_SCANCODE_W, SDL_SCANCODE_A},
+        {SDL_SCANCODE_W, SDL_SCANCODE_D},
+        {SDL_SCANCODE_S, SDL_SCANCODE_D},
+        {SDL_SCANCODE_S, SDL_SCANCODE_A},
 
-        };
+    };
 
-        for (const auto& dir : directions) {
-            bool allPressed = true;
-            for (const auto& key : dir) {
-                if (!currentKeyStates[key]) {
-                    allPressed = false;
-                    break;
-                }
-            }
-
-            if (allPressed) {
-                dx = (dir[1] == SDL_SCANCODE_A) ? -speed2 : speed2;
-                dy = (dir[0] == SDL_SCANCODE_W) ? -speed2 : speed2;
+    for (const auto& dir : directions) {
+        bool allPressed = true;
+        for (const auto& key : dir) {
+            if (!currentKeyStates[key]) {
+                allPressed = false;
                 break;
             }
         }
 
-        if (dx > 0){
-            right = 1;
-        }else if (dx < 0){
-            right = 0;
+        if (allPressed) {
+            dx = (dir[1] == SDL_SCANCODE_A) ? -speed/(sqrt(2)) : speed/(sqrt(2));
+            dy = (dir[0] == SDL_SCANCODE_W) ? -speed/(sqrt(2)) : speed/(sqrt(2));
+            break;
         }
     }
+
+    if (dx > 0){
+        right = 1;
+    }else if (dx < 0){
+        right = 0;
+    }
+}
 
 void updateDogPosition(Mouse &mouse, DOG &dog) {
     double distance = sqrt(pow(mouse.x - dog.x, 2) + pow(mouse.y - dog.y, 2));
@@ -183,42 +183,52 @@ void CheckCollisionWall(Mouse &mouse, vector<WALL> &walls) {
     }
 }
 
-void CheckNameObject(OBJECTS &ob, TILEMAP &fullObjectsImage, BAG &Bag){
+void CheckNameObject(OBJECTS &ob, TILEMAP &fullObjectsImage, BAG &Bag, SOUND &gameSound){
     const Uint8* Key = SDL_GetKeyboardState(NULL);
-    if (ob.name == "Tv" ||ob.name == "Tv2"){
-            InteractY0_Y_Y1_OI2(ob, Key, fullObjectsImage );
+    if (ob.name == "ancient_vase"){
+        InteractY0_Y_OI2(ob, Key, fullObjectsImage, Bag);
+
+    }else if (ob.name == "phonograph"){
+        InteractXY(ob, Key, fullObjectsImage, Bag);
+
+    }else if (ob.name == "Tv" ||ob.name == "Tv2"){
+        InteractY0_Y_Y1_OI2(ob, Key, fullObjectsImage, Bag);
+
     }else{
         if (Key[SDL_SCANCODE_E]){
-            Bag.money += ob.cost;
-            ob.cost = 0;
+            if (ob.cost != 0){
+                fullObjectsImage.graphics.play(gameSound.cash_register);
+                Bag.money += ob.cost;
+                ob.cost = 0;
+            }
         }
     }
 
+
 }
 
-void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, TILEMAP &fullObjectsImage, BAG &Bag){
-
+void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, TILEMAP &fullObjectsImage, BAG &Bag, SOUND &gameSound){
         for (auto &ob : objects){
             if (ob.exist){
                 if (Collision2(mouse, ob)== 1){
                     mouse.x = ob.x - 32;
-                    CheckNameObject(ob,  fullObjectsImage, Bag);
+                    CheckNameObject(ob,  fullObjectsImage, Bag, gameSound);
                 }
                 if (Collision2(mouse, ob)== 2){
                     mouse.x = ob.x + ob.w;
-                    CheckNameObject(ob,  fullObjectsImage, Bag);
+                    CheckNameObject(ob,  fullObjectsImage, Bag, gameSound);
                 }
                 if (Collision2(mouse, ob)== 3){
                     mouse.y = ob.y - 32;
-                    CheckNameObject(ob,  fullObjectsImage, Bag);
+                    CheckNameObject(ob,  fullObjectsImage, Bag, gameSound);
                 }
                 if (Collision2(mouse, ob)== 4){
                     mouse.y = ob.y + ob.h - 32;
-                    CheckNameObject(ob,  fullObjectsImage, Bag);
+                    CheckNameObject(ob,  fullObjectsImage, Bag, gameSound);
                 }
             }else{
                 if (Collision3(mouse, ob)== 1){
-                    CheckNameObject(ob,  fullObjectsImage, Bag);
+                    CheckNameObject(ob,  fullObjectsImage, Bag, gameSound);
                 }
 
             }
@@ -231,17 +241,17 @@ void CheckCollisionCamera(Mouse &mouse, const vector<ZONE> &camerascan, const bo
 
     for (auto cs : camerascan){
         if (Collision3(mouse, cs)){
-            if (camnow){
-                if (cs.name == "CamScan1_1") Busted_Out(Image, b);
-                if (cs.name == "CamScan2_1") Busted_Out(Image, b);
-                if (cs.name == "CamScan3_1") Busted_Out(Image, b);
-                if (cs.name == "CamScan4_1") Busted_Out(Image, b);
-            }else{
-                if (cs.name == "CamScan1_2") Busted_Out(Image, b);
-                if (cs.name == "CamScan2_2") Busted_Out(Image, b);
-                if (cs.name == "CamScan3_2") Busted_Out(Image, b);
-                if (cs.name == "CamScan4_2") Busted_Out(Image, b);
-            }
+//            if (camnow){
+//                if (cs.name == "CamScan1_1") Busted_Out(Image, b);
+//                if (cs.name == "CamScan2_1") Busted_Out(Image, b);
+//                if (cs.name == "CamScan3_1") Busted_Out(Image, b);
+//                if (cs.name == "CamScan4_1") Busted_Out(Image, b);
+//            }else{
+//                if (cs.name == "CamScan1_2") Busted_Out(Image, b);
+//                if (cs.name == "CamScan2_2") Busted_Out(Image, b);
+//                if (cs.name == "CamScan3_2") Busted_Out(Image, b);
+//                if (cs.name == "CamScan4_2") Busted_Out(Image, b);
+//            }
         }
     }
 }
@@ -252,6 +262,7 @@ void CheckNameVCL(const ZONE vcl, Graphics &graphics, const TILEMAP &fullObjects
     if (vcl.name == "v3") VungCheKhuat_xyy1_OI1(vcl, graphics, fullObjectsImage);
     if (vcl.name == "v4") VungCheKhuat_xx1yy1_OI1(vcl, graphics, fullObjectsImage);
     if (vcl.name == "v4_OI2") VungCheKhuat_xx1yy1_OI2(vcl, graphics, fullObjectsImage);
+    if (vcl.name == "tv") VungCheKhuat_xyy1_OI2(vcl, graphics, fullObjectsImage);
 
 }
 

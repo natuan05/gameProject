@@ -77,8 +77,49 @@ struct IMAGE{
     SDL_Texture* TimeText=  nullptr;
     SDL_Texture* MoneyText =  nullptr;
     SDL_Texture* MissionComplete = nullptr;
+
+    void FreeResources();
+
 };
 
+void IMAGE ::FreeResources() {
+    if (SleepDog != nullptr) {
+        SDL_DestroyTexture(SleepDog);
+        SleepDog = nullptr;
+    }
+    if (DogImage != nullptr) {
+        SDL_DestroyTexture(DogImage);
+        DogImage = nullptr;
+    }
+    if (NightMark != nullptr) {
+        SDL_DestroyTexture(NightMark);
+        NightMark = nullptr;
+    }
+    if (Hint1 != nullptr) {
+        SDL_DestroyTexture(Hint1);
+        Hint1 = nullptr;
+    }
+    if (DogRuns != nullptr) {
+        SDL_DestroyTexture(DogRuns);
+        DogRuns = nullptr;
+    }
+    if (Busted != nullptr) {
+        SDL_DestroyTexture(Busted);
+        Busted = nullptr;
+    }
+    if (TimeText != nullptr) {
+        SDL_DestroyTexture(TimeText);
+        TimeText = nullptr;
+    }
+    if (MoneyText != nullptr) {
+        SDL_DestroyTexture(MoneyText);
+        MoneyText = nullptr;
+    }
+    if (MissionComplete != nullptr) {
+        SDL_DestroyTexture(MissionComplete);
+        MissionComplete = nullptr;
+    }
+}
 struct MENU_IMAGE{
     Graphics graphics;
     SDL_Texture* MenuBackground =  nullptr;
@@ -117,6 +158,7 @@ struct FONT{
 
 struct BAG{
     int money = 0;
+    double weight = 0;
 
 };
 
