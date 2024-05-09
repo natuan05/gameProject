@@ -282,8 +282,7 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
     gameSound.FreeResources();
     Image.FreeResources();
     TileMap.freeResources();
-
-
+    Sprite_Robber.FreeResources();
 }
 
 int main(int argc, char* argv[])

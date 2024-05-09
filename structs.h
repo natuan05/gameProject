@@ -66,13 +66,16 @@ struct SPRITE_CHARACTER{
     void Init(Graphics &graphics) {
         SDL_Texture* characterRun = graphics.loadTexture(ROBBERRUN_SPRITE_FILE);
         Run.init(characterRun, ROBBERRUN_FRAMES, ROBBERRUN_CLIPS);
+        characterRun = nullptr;
 
         SDL_Texture* characterSlow = graphics.loadTexture(ROBBERSLOW_SPRITE_FILE);
         Slow.init(characterSlow, ROBBERSLOW_FRAMES, ROBBERSLOW_CLIPS);
+        characterSlow = nullptr;
     }
 
     void FreeResources() {
-
+        Run.free();
+        Slow.free();
     }
 };
 

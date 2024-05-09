@@ -46,6 +46,11 @@ struct Sprite {
     const SDL_Rect* getCurrentClip() const {
         return &(clips[currentFrame]);
     }
+
+    void free(){
+        SDL_DestroyTexture(texture);
+        texture == nullptr;
+    }
 };
 
 struct Graphics{
