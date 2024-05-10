@@ -184,7 +184,7 @@ void Update_Time(TIME &GameplayTime, BOOL &b, IMAGE &Image, TTF_Font* font, cons
     int seconds = static_cast<int>((GameplayTime.countdownTimer - (minutes * 60000)) / 1000);
 
     string timeStr = to_string(minutes) + ":" + std::to_string(seconds);
-
+    SDL_DestroyTexture(Image.TimeText);
     Image.TimeText = Image.graphics.renderText(timeStr.c_str(), font, textColor);
 }
 
@@ -192,6 +192,7 @@ void Render_Text(IMAGE &Image, BAG &Bag, FONT &Font){
     Image.graphics.renderTexture(Image.TimeText, 10, 10);
 
     string moneyStr = "$:" + to_string(Bag.money);
+    SDL_DestroyTexture(Image.MoneyText);
     Image.MoneyText = Image.graphics.renderText(moneyStr.c_str(), Font.font1, Font.textColor);
     Image.graphics.renderTexture(Image.MoneyText, 10, 60);
 
@@ -200,6 +201,7 @@ void Render_Text(IMAGE &Image, BAG &Bag, FONT &Font){
 
 void Render_Menutext(MENU_IMAGE &MImage, BAG &Bag_Menu, FONT &Font){
     string moneyStr = "$:" + to_string(Bag_Menu.money);
+    SDL_DestroyTexture(MImage.MoneyText);
     MImage.MoneyText = MImage.graphics.renderText(moneyStr.c_str(), Font.font1, Font.textColor);
     MImage.graphics.renderTexture(MImage.MoneyText, 10, 10);
 }
@@ -241,7 +243,7 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
     SPRITE_CHARACTER Sprite_Robber(graphics);
     IMAGE Image(graphics);
     SOUND gameSound(graphics);
-    WALL_OBJECTS_ZONE woz;
+    WALL_OBJECTS_ZONE woz(graphics);
     DOG dog(Image);
     TIME GameplayTime;
     BAG Bag;
@@ -283,6 +285,7 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
     Image.FreeResources();
     TileMap.freeResources();
     Sprite_Robber.FreeResources();
+//    dog.FreeResources();
 }
 
 int main(int argc, char* argv[])

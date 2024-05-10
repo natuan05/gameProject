@@ -23,6 +23,7 @@ struct IMAGE{
     SDL_Texture* TimeText=  nullptr;
     SDL_Texture* MoneyText =  nullptr;
     SDL_Texture* MissionComplete = nullptr;
+    SDL_Texture* Racingcar = nullptr;
 
     IMAGE(Graphics &graphics) : graphics(graphics) {
         Init();
@@ -41,6 +42,7 @@ struct IMAGE{
         DogRuns = graphics.loadTexture(DOGRUN_SPRITE_FILE);
         Busted = graphics.loadTexture("img\\Busted.png");
         MissionComplete = graphics.loadTexture("img\\Good.png");
+        Racingcar = graphics.loadTexture("img\\Racingcar.png");
     }
 
     void FreeResources();
@@ -99,6 +101,10 @@ struct DOG{
 
     void Init(IMAGE &Image) {
         DogRun.init(Image.DogRuns, DOGRUN_FRAMES, DOGRUN_CLIPS);
+    }
+
+    void FreeResources(){
+        DogRun.free();
     }
 };
 
@@ -183,6 +189,10 @@ void IMAGE ::FreeResources() {
         SDL_DestroyTexture(MissionComplete);
         MissionComplete = nullptr;
     }
+    if (Racingcar != nullptr){
+        SDL_DestroyTexture(Racingcar);
+        Racingcar = nullptr;
+    }
 }
 struct MENU_IMAGE{
     Graphics graphics;
@@ -230,7 +240,7 @@ struct WALL_OBJECTS_ZONE{
     ZONE GetInCar;
 
 
-    WALL_OBJECTS_ZONE() {
+    WALL_OBJECTS_ZONE(Graphics &graphics): graphics(graphics) {
         Init();
     }
 
@@ -340,7 +350,11 @@ struct SOUND {
     }
 };
 
-struct CAR{
+struct Car {
+    double x, y;
+    double speed = 4;
+
 
 };
+
 #endif // MENU_H_INCLUDED
