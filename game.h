@@ -115,9 +115,18 @@ void updateDogPosition(Mouse &mouse, DOG &dog) {
         dog.y = mouse.y;
     }
 }
-void Busted_Out(IMAGE &Image, BOOL &b){
+void Busted_Out(IMAGE &Image, BOOL &b, SOUND &gameSound){
     Image.graphics.renderTexture(Image.Busted, 0, 0);
     Image.graphics.presentScene();
+    if (gameSound.dog_barking != nullptr) {
+        Mix_FreeChunk(gameSound.dog_barking);
+        gameSound.dog_barking = nullptr;
+    }
+    Mix_FreeMusic(gameSound.background_music);
+    gameSound.background_music = nullptr;
+
+    Image.graphics.play(gameSound.fail);
+
     SDL_Delay(3000);
 
     b.gamePlay = 0;
@@ -141,7 +150,7 @@ void CheckBorder (Mouse &mouse){
 
 }
 //Kiem tra va cham ngoai
-int Collision1(const Mouse &mouse, const WALL wall){
+int Collision1(const Mouse &mouse, const WALL &wall){
     if (mouse.x + 32 > wall.x && mouse.x + 32 < wall.x + 5 && mouse.y + 32 > wall.y && mouse.y + 32 < wall.y + wall.h) return 1;
     if (mouse.x < wall.x + wall.w && mouse.x > wall.x +wall.w -5 && mouse.y + 32 > wall.y && mouse.y + 32< wall.y + wall.h) return 2;
     if (mouse.x + 32> wall.x && mouse.x< wall.x + wall.w && mouse.y + 32 > wall.y && mouse.y +32 < wall.y + 5) return 3;
@@ -170,6 +179,11 @@ int Collision3(const Mouse &mouse, const ZONE &z){
 
 int Collision3(const Mouse &mouse, const DOG &dog){
     if (mouse.x <= dog.x + dog.w && mouse.x + 32 >= dog.x && mouse.y <= dog.y + dog.h && mouse.y + 32 >= dog.y) return 1;
+    return 0;
+}
+
+int CollisionWithCar(const Mouse &mouse, const SDL_Rect &z){
+    if (mouse.x < z.x + z.w && mouse.x + 32 > z.x && mouse.y <= z.y + z.h -32&& mouse.y + 32 >= z.y) return 1;
     return 0;
 }
 
@@ -237,21 +251,21 @@ void CheckCollisionObjects(Mouse &mouse, vector<OBJECTS> &objects, TILEMAP &full
 
 }
 
-void CheckCollisionCamera(Mouse &mouse, const vector<ZONE> &camerascan, const bool &camnow, IMAGE &Image, BOOL &b){
+void CheckCollisionCamera(Mouse &mouse, const vector<ZONE> &camerascan, const bool &camnow, IMAGE &Image, BOOL &b, SOUND &gameSound){
 
     for (auto cs : camerascan){
         if (Collision3(mouse, cs)){
-//            if (camnow){
-//                if (cs.name == "CamScan1_1") Busted_Out(Image, b);
-//                if (cs.name == "CamScan2_1") Busted_Out(Image, b);
-//                if (cs.name == "CamScan3_1") Busted_Out(Image, b);
-//                if (cs.name == "CamScan4_1") Busted_Out(Image, b);
-//            }else{
-//                if (cs.name == "CamScan1_2") Busted_Out(Image, b);
-//                if (cs.name == "CamScan2_2") Busted_Out(Image, b);
-//                if (cs.name == "CamScan3_2") Busted_Out(Image, b);
-//                if (cs.name == "CamScan4_2") Busted_Out(Image, b);
-//            }
+            if (camnow){
+                if (cs.name == "CamScan1_1") Busted_Out(Image, b, gameSound);
+                if (cs.name == "CamScan2_1") Busted_Out(Image, b, gameSound);
+                if (cs.name == "CamScan3_1") Busted_Out(Image, b, gameSound);
+                if (cs.name == "CamScan4_1") Busted_Out(Image, b, gameSound);
+            }else{
+                if (cs.name == "CamScan1_2") Busted_Out(Image, b, gameSound);
+                if (cs.name == "CamScan2_2") Busted_Out(Image, b, gameSound);
+                if (cs.name == "CamScan3_2") Busted_Out(Image, b, gameSound);
+                if (cs.name == "CamScan4_2") Busted_Out(Image, b, gameSound);
+            }
         }
     }
 }

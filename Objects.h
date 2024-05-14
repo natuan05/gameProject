@@ -6,7 +6,6 @@
 using namespace std;
 
 struct WALL{
-
     int x;
     int y;
     int w;

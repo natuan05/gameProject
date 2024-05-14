@@ -116,19 +116,45 @@ void Escape(Mouse &mouse, WALL_OBJECTS_ZONE &woz, IMAGE &Image, BOOL &b, SOUND &
     if(Collision3(mouse, woz.GetInCar)){
         if (KeyE[SDL_SCANCODE_E]){
             Bag_Menu.money += Bag.money;
-
             Image.graphics.renderTexture(Image.MissionComplete, 0, 0);
+
+            if (Bag.money < 1000){
+                Image.graphics.renderTexture(Image.Star, 0, 0);
+                Image.graphics.renderTexture(Image.Star, 180, 0);
+                Image.graphics.renderTexture(Image.Star, 360, 0);
+            }else if (Bag.money < 2250){
+                Image.graphics.renderTexture(Image.Star_bright, 0, 0);
+                Image.graphics.renderTexture(Image.Star, 180, 0);
+                Image.graphics.renderTexture(Image.Star, 360, 0);
+            }else if (Bag.money < 3000){
+                Image.graphics.renderTexture(Image.Star_bright, 0, 0);
+                Image.graphics.renderTexture(Image.Star_bright, 180, 0);
+                Image.graphics.renderTexture(Image.Star, 360, 0);
+            }else{
+                Image.graphics.renderTexture(Image.Star_bright, 0, 0);
+                Image.graphics.renderTexture(Image.Star_bright, 180, 0);
+                Image.graphics.renderTexture(Image.Star_bright, 360, 0);
+            }
+
             Image.graphics.presentScene();
+
+            if (gameSound.dog_barking != nullptr) {
+                Mix_FreeChunk(gameSound.dog_barking);
+                gameSound.dog_barking = nullptr;
+            }
+            Mix_FreeMusic(gameSound.background_music);
+            gameSound.background_music = nullptr;
+
             Image.graphics.play(gameSound.tada);
 
-            SDL_Delay(1000);
+            SDL_Delay(3000);
             b.menu = 1;
             b.gamePlay = 0;
         }
     }
 }
 
-void Check_Dogchase(Mouse &mouse, DOG &dog, IMAGE &Image, ZONE &vcd, BOOL &b, Mix_Chunk* g){
+void Check_Dogchase(Mouse &mouse, DOG &dog, IMAGE &Image, ZONE &vcd, BOOL &b, SOUND &gameSound){
         const Uint8* KeySlow = SDL_GetKeyboardState(NULL);
         if (dog.dogchase == 0){
             if (Collision3(mouse, vcd)){
@@ -142,14 +168,15 @@ void Check_Dogchase(Mouse &mouse, DOG &dog, IMAGE &Image, ZONE &vcd, BOOL &b, Mi
                 dog.DogRun.tickdog(dog.prevTicksForDogRun);
                 updateDogPosition(mouse, dog);
                 Image.graphics.render(dog.x, dog.y, dog.DogRun, dog.right);
-                Image.graphics.play(g);
+                Image.graphics.play(gameSound.dog_barking);
 
             }else{
                 Image.graphics.renderTexture(Image.DogImage, dog.x, dog.y);
 
-//                if(Collision3(mouse, dog)){
-//                    Busted_Out(Image, b);
-//                }
+                if(Collision3(mouse, dog)){
+
+                    Busted_Out(Image, b, gameSound);
+                }
             }
         }else{
             Image.graphics.renderTexture(Image.SleepDog, 322, 465);
@@ -163,7 +190,7 @@ void Collision_Interact(Mouse &mouse, TILEMAP &TileMap, WALL_OBJECTS_ZONE &woz, 
     CheckCollisionObjects(mouse, woz.objects, TileMap, Bag, gameSound);
     CheckCollisionObjectsToRender(mouse, woz.vungchelap, Image.graphics, TileMap);
 
-    CheckCollisionCamera(mouse, woz.camerascan, TileMap.cn, Image, b);
+    CheckCollisionCamera(mouse, woz.camerascan, TileMap.cn, Image, b, gameSound);
 
 }
 
@@ -237,6 +264,29 @@ void RunMenu(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
     if (gMusic != nullptr) Mix_FreeMusic( gMusic );
 }
 
+void CheckCar(Car &QuangCar, IMAGE &Image, Mouse &mouse, BOOL &b, SOUND &gameSound){
+    QuangCar.Randomcar();
+    QuangCar.Render(Image);
+    if (CollisionWithCar(mouse, QuangCar.position)){
+        Image.graphics.renderTexture(Image.Youdied, 0, 0);
+        Image.graphics.presentScene();
+        if (gameSound.dog_barking != nullptr) {
+            Mix_FreeChunk(gameSound.dog_barking);
+            gameSound.dog_barking = nullptr;
+        }
+        Mix_FreeMusic(gameSound.background_music);
+        gameSound.background_music = nullptr;
+
+        Image.graphics.play(gameSound.car_accident);
+
+        SDL_Delay(3000);
+
+        b.gamePlay = 0;
+        b.menu = 1;
+    }
+
+}
+
 void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
     Mouse mouse;
     TILEMAP TileMap(graphics);
@@ -247,6 +297,8 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
     DOG dog(Image);
     TIME GameplayTime;
     BAG Bag;
+
+    Car QuangCar;
 
     gameSound.graphics.play(gameSound.background_music);
     SDL_Event event;
@@ -261,11 +313,13 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
 
         Draw_Background_Objects(TileMap);
 
+        CheckCar(QuangCar, Image, mouse, b, gameSound);
+
         Character_Move(mouse, graphics, Sprite_Robber, Bag);
 
         Collision_Interact(mouse, TileMap, woz, Image, Bag, b, gameSound);
 
-        Check_Dogchase(mouse, dog, Image, woz.vungchoduoi, b, gameSound.dog_barking);
+        Check_Dogchase(mouse, dog, Image, woz.vungchoduoi, b, gameSound);
 
         Draw_Layer2(TileMap, Image);
 
@@ -285,7 +339,7 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
     Image.FreeResources();
     TileMap.freeResources();
     Sprite_Robber.FreeResources();
-//    dog.FreeResources();
+    dog.FreeResources();
 }
 
 int main(int argc, char* argv[])

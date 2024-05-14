@@ -24,6 +24,9 @@ struct IMAGE{
     SDL_Texture* MoneyText =  nullptr;
     SDL_Texture* MissionComplete = nullptr;
     SDL_Texture* Racingcar = nullptr;
+    SDL_Texture* Star = nullptr;
+    SDL_Texture* Star_bright = nullptr;
+    SDL_Texture* Youdied = nullptr;
 
     IMAGE(Graphics &graphics) : graphics(graphics) {
         Init();
@@ -43,6 +46,9 @@ struct IMAGE{
         Busted = graphics.loadTexture("img\\Busted.png");
         MissionComplete = graphics.loadTexture("img\\Good.png");
         Racingcar = graphics.loadTexture("img\\Racingcar.png");
+        Star = graphics.loadTexture("img\\star.png");
+        Star_bright = graphics.loadTexture("img\\star_bright.png");
+        Youdied = graphics.loadTexture("img\\Youdied.png");
     }
 
     void FreeResources();
@@ -193,6 +199,18 @@ void IMAGE ::FreeResources() {
         SDL_DestroyTexture(Racingcar);
         Racingcar = nullptr;
     }
+    if (Star_bright != nullptr){
+        SDL_DestroyTexture(Star_bright);
+        Star_bright = nullptr;
+    }
+    if (Star != nullptr){
+        SDL_DestroyTexture(Star);
+        Star = nullptr;
+    }
+    if (Youdied != nullptr){
+        SDL_DestroyTexture(Youdied);
+        Youdied = nullptr;
+    }
 }
 struct MENU_IMAGE{
     Graphics graphics;
@@ -310,6 +328,8 @@ struct SOUND {
     Mix_Chunk *dog_barking = nullptr;
     Mix_Chunk *tada = nullptr;
     Mix_Chunk *cash_register = nullptr;
+    Mix_Chunk *car_accident = nullptr;
+    Mix_Chunk *fail = nullptr;
 
     SOUND(Graphics &graphics) : graphics(graphics) {
         Init();
@@ -324,6 +344,8 @@ struct SOUND {
         dog_barking = graphics.loadSound("Music\\dog_barking.mp3");
         tada = graphics.loadSound("Music\\tada.mp3");
         cash_register = graphics.loadSound("Music\\cash_register.mp3");
+        car_accident = graphics.loadSound("Music\\car_accident.mp3");
+        fail = graphics.loadSound("Music\\fail.mp3");
 
         if (dog_barking != nullptr) {
             Mix_VolumeChunk(dog_barking, 30);
@@ -351,8 +373,34 @@ struct SOUND {
 };
 
 struct Car {
-    double x, y;
-    double speed = 4;
+    SDL_Rect position = {64, -128, 80, 128};
+
+    double speed = 7;
+    bool isrunning = 0;
+
+    void Update(){
+        position.y += speed;
+    }
+
+    void Render(IMAGE &Image){
+        Image.graphics.renderTexture(Image.Racingcar, position.x, position.y);
+    }
+
+    void Randomcar(){
+        if (!isrunning){
+            int num = rand() % 150;
+            if ( num == 50 ){
+                isrunning = 1;
+                position.x = 64;
+                position.y = -128;
+            }
+        }else{
+            Update();
+            if (position.y > SCREEN_HEIGHT){
+                isrunning = 0;
+            }
+        }
+    }
 
 
 };
