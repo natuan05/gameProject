@@ -194,8 +194,6 @@ void Collision_Interact(Mouse &mouse, TILEMAP &TileMap, WALL_OBJECTS_ZONE &woz, 
 
 }
 
-
-
 void Update_Time(TIME &GameplayTime, BOOL &b, IMAGE &Image, TTF_Font* font, const SDL_Color &textColor ){
     Uint32 currentTicks = SDL_GetTicks();
     Uint32 deltaTime = currentTicks - GameplayTime.prevTicks;

@@ -388,7 +388,7 @@ struct Car {
 
     void Randomcar(){
         if (!isrunning){
-            int num = rand() % 150;
+            int num = rand() % 130;
             if ( num == 50 ){
                 isrunning = 1;
                 position.x = 64;
