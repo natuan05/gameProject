@@ -7,7 +7,7 @@
 
 using namespace std;
 
-vector<vector<int>> loadTileMapFromCSV(const string& filePath) {
+vector<vector<int>> LoadTileMapFromCSV(const string& filePath) {
     vector<vector<int>> tileMap(MAP_HEIGHT, vector<int>(MAP_WIDTH, 0));
 
     ifstream file(filePath);
@@ -15,10 +15,10 @@ vector<vector<int>> loadTileMapFromCSV(const string& filePath) {
         string line;
         int row = 0;
         while (getline(file, line) && row < MAP_HEIGHT) {
-            stringstream iss(line);
+            stringstream ss(line);
             string value;
             int col = 0;
-            while (getline(iss, value, ',') && col < MAP_WIDTH) {
+            while (getline(ss, value, ',') && col < MAP_WIDTH) {
                 tileMap[row][col] = stoi(value);
                 col++;
             }

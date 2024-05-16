@@ -7,7 +7,15 @@
 #include "menu_processing.h"
 
 using namespace std;
-
+void SaveBag(const BAG &bagMenu) {
+    ofstream outFile("bag_menu.txt", ios::trunc);
+    if (outFile.is_open()) {
+        outFile << bagMenu.money << "\n";
+        outFile.close();
+    } else {
+        cout << "khong mo duoc savebag" << endl;
+    }
+}
 void Draw_Menu(MENU_IMAGE &MImage){
     SDL_RenderClear(MImage.graphics.renderer);
     MImage.graphics.renderTexture(MImage.MenuBackground, 0, 0);
@@ -116,6 +124,7 @@ void Escape(Mouse &mouse, WALL_OBJECTS_ZONE &woz, IMAGE &Image, BOOL &b, SOUND &
     if(Collision3(mouse, woz.GetInCar)){
         if (KeyE[SDL_SCANCODE_E]){
             Bag_Menu.money += Bag.money;
+            SaveBag(Bag_Menu);
             Image.graphics.renderTexture(Image.MissionComplete, 0, 0);
 
             if (Bag.money < 1000){
@@ -231,9 +240,20 @@ void Render_Menutext(MENU_IMAGE &MImage, BAG &Bag_Menu, FONT &Font){
     MImage.graphics.renderTexture(MImage.MoneyText, 10, 10);
 }
 
-void RunMenu(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
-    MENU_IMAGE MImage(graphics);
+void LoadBag(BAG &Bag_Menu) {
+    ifstream inFile("bag_menu.txt");
+    if (inFile.is_open()) {
+        inFile >> Bag_Menu.money;
+        inFile.close();
+    } else {
+        cout << "khong mo duoc";
+    }
+}
 
+
+void RunMenu(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
+    LoadBag(Bag_Menu);
+    MENU_IMAGE MImage(graphics);
     BUTTONS Buttons;
 
     Mix_Music *gMusic = graphics.loadMusic("Music\\PinkPanther.mp3");
@@ -258,29 +278,42 @@ void RunMenu(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
 
         SDL_Delay(10);
     }
+
     MImage.freeResources();
     if (gMusic != nullptr) Mix_FreeMusic( gMusic );
 }
 
-void CheckCar(Car &QuangCar, IMAGE &Image, Mouse &mouse, BOOL &b, SOUND &gameSound){
-    QuangCar.Randomcar();
-    QuangCar.Render(Image);
-    if (CollisionWithCar(mouse, QuangCar.position)){
-        Image.graphics.renderTexture(Image.Youdied, 0, 0);
-        Image.graphics.presentScene();
-        if (gameSound.dog_barking != nullptr) {
-            Mix_FreeChunk(gameSound.dog_barking);
-            gameSound.dog_barking = nullptr;
+void CheckCar(Car &QuangCar, IMAGE &Image, Mouse &mouse, BOOL &b, SOUND &gameSound, BAG &Bag_Menu, WALL_OBJECTS_ZONE &woz){
+    if (Collision3(mouse, woz.Road)){
+        QuangCar.Randomcar(gameSound);
+        QuangCar.Render(Image);
+        if (CollisionWithCar(mouse, QuangCar.position)){
+            Image.graphics.renderTexture(Image.Youdied, 0, 0);
+            Image.graphics.presentScene();
+            if (gameSound.dog_barking != nullptr) {
+                Mix_FreeChunk(gameSound.dog_barking);
+                gameSound.dog_barking = nullptr;
+            }
+            Mix_FreeChunk(gameSound.horn);
+            gameSound.horn = nullptr;
+
+            Mix_FreeMusic(gameSound.background_music);
+            gameSound.background_music = nullptr;
+
+            Image.graphics.play(gameSound.car_accident);
+
+            SDL_Delay(3000);
+
+            Bag_Menu.money = 0;
+            SaveBag(Bag_Menu);
+            b.gamePlay = 0;
+            b.menu = 1;
         }
-        Mix_FreeMusic(gameSound.background_music);
-        gameSound.background_music = nullptr;
-
-        Image.graphics.play(gameSound.car_accident);
-
-        SDL_Delay(3000);
-
-        b.gamePlay = 0;
-        b.menu = 1;
+    }else{
+        if (QuangCar.isrunning){
+            QuangCar.Update();
+            QuangCar.Render(Image);
+        }
     }
 
 }
@@ -311,7 +344,7 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
 
         Draw_Background_Objects(TileMap);
 
-        CheckCar(QuangCar, Image, mouse, b, gameSound);
+        CheckCar(QuangCar, Image, mouse, b, gameSound, Bag_Menu, woz);
 
         Character_Move(mouse, graphics, Sprite_Robber, Bag);
 
@@ -324,6 +357,7 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
         Check_Hint(mouse, woz, Image);
 
         Escape(mouse, woz, Image, b, gameSound, Bag, Bag_Menu);
+
 
         Render_Text(Image, Bag, Font);
 

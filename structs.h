@@ -28,6 +28,7 @@ struct IMAGE{
     SDL_Texture* Star_bright = nullptr;
     SDL_Texture* Youdied = nullptr;
 
+
     IMAGE(Graphics &graphics) : graphics(graphics) {
         Init();
     }
@@ -49,6 +50,7 @@ struct IMAGE{
         Star = graphics.loadTexture("img\\star.png");
         Star_bright = graphics.loadTexture("img\\star_bright.png");
         Youdied = graphics.loadTexture("img\\Youdied.png");
+
     }
 
     void FreeResources();
@@ -138,15 +140,15 @@ struct TILEMAP{
 
     void init() {
         tilesetImage = graphics.loadTexture("Map\\tilemap.png");
-        OI1 = loadTileMapFromCSV("Map\\gameDemo2_Objects.csv");
-        OI2 = loadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
+        OI1 = LoadTileMapFromCSV("Map\\gameDemo2_Objects.csv");
+        OI2 = LoadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
         OI1CP = OI1;
         OI2CP = OI2;
-        BackGround = loadTileMapFromCSV("Map\\gameDemo2_BackGround.csv");
-        Camera1 = loadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
-        Camera2 = loadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
+        BackGround = LoadTileMapFromCSV("Map\\gameDemo2_BackGround.csv");
+        Camera1 = LoadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
+        Camera2 = LoadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
         CameraNow = Camera1;
-        Layer2 = loadTileMapFromCSV("Map\\gameDemo2_Layer2.csv");
+        Layer2 = LoadTileMapFromCSV("Map\\gameDemo2_Layer2.csv");
     }
 
     void freeResources() {
@@ -256,6 +258,7 @@ struct WALL_OBJECTS_ZONE{
     ZONE vungchoduoi;
     ZONE hint;
     ZONE GetInCar;
+    ZONE Road;
 
 
     WALL_OBJECTS_ZONE(Graphics &graphics): graphics(graphics) {
@@ -270,6 +273,7 @@ struct WALL_OBJECTS_ZONE{
         vungchoduoi = ZONE("vungchoduoi", 320, 0, 320, 737);
         hint = ZONE("hint", 256, 256, 32, 32);
         GetInCar = ZONE("", 128, 64, 32, 32);
+        Road = ZONE("", 0, 0, 224, 736);
     }
 };
 
@@ -330,6 +334,7 @@ struct SOUND {
     Mix_Chunk *cash_register = nullptr;
     Mix_Chunk *car_accident = nullptr;
     Mix_Chunk *fail = nullptr;
+    Mix_Chunk *horn = nullptr;
 
     SOUND(Graphics &graphics) : graphics(graphics) {
         Init();
@@ -346,10 +351,11 @@ struct SOUND {
         cash_register = graphics.loadSound("Music\\cash_register.mp3");
         car_accident = graphics.loadSound("Music\\car_accident.mp3");
         fail = graphics.loadSound("Music\\fail.mp3");
+        horn = graphics.loadSound("Music\\horn.mp3");
 
-        if (dog_barking != nullptr) {
-            Mix_VolumeChunk(dog_barking, 30);
-        }
+        Mix_VolumeChunk(dog_barking, 30);
+        Mix_VolumeChunk(horn, 30);
+
     }
 
     void FreeResources() {
@@ -380,13 +386,16 @@ struct Car {
 
     void Update(){
         position.y += speed;
+        if (position.y > SCREEN_HEIGHT){
+                isrunning = 0;
+        }
     }
 
     void Render(IMAGE &Image){
         Image.graphics.renderTexture(Image.Racingcar, position.x, position.y);
     }
 
-    void Randomcar(){
+    void Randomcar(SOUND &gameSound){
         if (!isrunning){
             int num = rand() % 130;
             if ( num == 50 ){
@@ -395,14 +404,13 @@ struct Car {
                 position.y = -128;
             }
         }else{
+            gameSound.graphics.play(gameSound.horn);
             Update();
-            if (position.y > SCREEN_HEIGHT){
-                isrunning = 0;
-            }
+
         }
     }
 
-
 };
+
 
 #endif // MENU_H_INCLUDED
