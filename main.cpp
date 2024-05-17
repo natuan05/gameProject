@@ -109,7 +109,7 @@ void Draw_Layer2(TILEMAP &TileMap, IMAGE &Image){
 
 }
 
-void Check_Hint(Mouse &mouse, WALL_OBJECTS_ZONE &woz, IMAGE &Image){
+void Check_Hint(const Mouse &mouse,const WALL_OBJECTS_ZONE &woz, IMAGE &Image){
     const Uint8* KeyE = SDL_GetKeyboardState(NULL);
     if(Collision3(mouse, woz.hint)){
         if (KeyE[SDL_SCANCODE_E]){
@@ -119,7 +119,7 @@ void Check_Hint(Mouse &mouse, WALL_OBJECTS_ZONE &woz, IMAGE &Image){
 
 }
 
-void Escape(Mouse &mouse, WALL_OBJECTS_ZONE &woz, IMAGE &Image, BOOL &b, SOUND &gameSound, BAG &Bag, BAG &Bag_Menu){
+void Escape(Mouse &mouse,const WALL_OBJECTS_ZONE &woz, IMAGE &Image, BOOL &b, SOUND &gameSound, BAG &Bag, BAG &Bag_Menu){
     const Uint8* KeyE = SDL_GetKeyboardState(NULL);
     if(Collision3(mouse, woz.GetInCar)){
         if (KeyE[SDL_SCANCODE_E]){
