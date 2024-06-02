@@ -158,12 +158,12 @@ void Escape(Mouse &mouse,const WALL_OBJECTS_ZONE &woz, IMAGE &Image, BOOL &b, SO
 
             SDL_Delay(3000);
             b.menu = 1;
-            b.gamePlay = 0;
+            b.gamePlay1 = 0;
         }
     }
 }
 
-void Check_Dogchase(Mouse &mouse, DOG &dog, IMAGE &Image, ZONE &vcd, BOOL &b, SOUND &gameSound){
+void Check_Dogchase(Mouse &mouse, DOG &dog, IMAGE &Image, ZONE &vcd, BOOL &b, SOUND &gameSound, TILEMAP &TileMap){
         const Uint8* KeySlow = SDL_GetKeyboardState(NULL);
         if (dog.dogchase == 0){
             if (Collision3(mouse, vcd)){
@@ -175,15 +175,13 @@ void Check_Dogchase(Mouse &mouse, DOG &dog, IMAGE &Image, ZONE &vcd, BOOL &b, SO
         if (dog.dogchase){
             if (Collision3(mouse, vcd) && !Collision3(mouse, dog)){
                 dog.DogRun.tickdog(dog.prevTicksForDogRun);
-                updateDogPosition(mouse, dog);
+                updateDogPosition(mouse, dog, TileMap.mapdog);
                 Image.graphics.render(dog.x, dog.y, dog.DogRun, dog.right);
                 Image.graphics.play(gameSound.dog_barking);
 
             }else{
                 Image.graphics.renderTexture(Image.DogImage, dog.x, dog.y);
-
                 if(Collision3(mouse, dog)){
-
                     Busted_Out(Image, b, gameSound);
                 }
             }
@@ -211,7 +209,7 @@ void Update_Time(TIME &GameplayTime, BOOL &b, IMAGE &Image, TTF_Font* font, cons
     GameplayTime.countdownTimer -= deltaTime;
 
     if (GameplayTime.countdownTimer <= 0) {
-        b.gamePlay = false;
+        b.gamePlay1 = false;
         b.menu = true;
     }
     int minutes = static_cast<int>(GameplayTime.countdownTimer / 60000);
@@ -229,7 +227,6 @@ void Render_Text(IMAGE &Image, BAG &Bag, FONT &Font){
     SDL_DestroyTexture(Image.MoneyText);
     Image.MoneyText = Image.graphics.renderText(moneyStr.c_str(), Font.font1, Font.textColor);
     Image.graphics.renderTexture(Image.MoneyText, 10, 60);
-
 
 }
 
@@ -306,7 +303,7 @@ void CheckCar(Car &QuangCar, IMAGE &Image, Mouse &mouse, BOOL &b, SOUND &gameSou
 
             Bag_Menu.money = 0;
             SaveBag(Bag_Menu);
-            b.gamePlay = 0;
+            b.gamePlay1 = 0;
             b.menu = 1;
         }
     }else{
@@ -318,13 +315,14 @@ void CheckCar(Car &QuangCar, IMAGE &Image, Mouse &mouse, BOOL &b, SOUND &gameSou
 
 }
 
-void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
+void GamePlay1(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
     Mouse mouse;
-    TILEMAP TileMap(graphics);
+    TILEMAP TileMap(graphics, b);
+
     SPRITE_CHARACTER Sprite_Robber(graphics);
     IMAGE Image(graphics);
     SOUND gameSound(graphics);
-    WALL_OBJECTS_ZONE woz(graphics);
+    WALL_OBJECTS_ZONE woz(graphics, b);
     DOG dog(Image);
     TIME GameplayTime;
     BAG Bag;
@@ -333,36 +331,70 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
 
     gameSound.graphics.play(gameSound.background_music);
     SDL_Event event;
-    while(b.gamePlay){
+    while(b.gamePlay1){
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT){
-                b.gamePlay = 0;
+                b.gamePlay1 = 0;
                 b.quit = 1;
             }
         }
         Update_Time(GameplayTime, b, Image, Font.font1, Font.textColor);
-
         Draw_Background_Objects(TileMap);
-
         CheckCar(QuangCar, Image, mouse, b, gameSound, Bag_Menu, woz);
-
         Character_Move(mouse, graphics, Sprite_Robber, Bag);
-
         Collision_Interact(mouse, TileMap, woz, Image, Bag, b, gameSound);
-
-        Check_Dogchase(mouse, dog, Image, woz.vungchoduoi, b, gameSound);
-
+        Check_Dogchase(mouse, dog, Image, woz.vungchoduoi, b, gameSound, TileMap);
         Draw_Layer2(TileMap, Image);
-
         Check_Hint(mouse, woz, Image);
-
         Escape(mouse, woz, Image, b, gameSound, Bag, Bag_Menu);
-
-
         Render_Text(Image, Bag, Font);
-
         graphics.presentScene();
+        SDL_Delay(10);
 
+    }
+
+    gameSound.FreeResources();
+    Image.FreeResources();
+    TileMap.freeResources();
+    Sprite_Robber.FreeResources();
+    dog.FreeResources();
+}
+void GamePlay2(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
+    Mouse mouse;
+    TILEMAP TileMap(graphics, b);
+
+    SPRITE_CHARACTER Sprite_Robber(graphics);
+    IMAGE Image(graphics);
+    SOUND gameSound(graphics);
+    WALL_OBJECTS_ZONE woz(graphics, b);
+    DOG dog(Image);
+    DOG dog2(Image);
+    TIME GameplayTime;
+    BAG Bag;
+
+    Car QuangCar;
+
+    gameSound.graphics.play(gameSound.background_music);
+    SDL_Event event;
+    while(b.gamePlay2){
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT){
+                b.gamePlay1 = 0;
+                b.quit = 1;
+            }
+        }
+        Update_Time(GameplayTime, b, Image, Font.font1, Font.textColor);
+        Draw_Background_Objects(TileMap);
+        CheckCar(QuangCar, Image, mouse, b, gameSound, Bag_Menu, woz);
+        Character_Move(mouse, graphics, Sprite_Robber, Bag);
+        Collision_Interact(mouse, TileMap, woz, Image, Bag, b, gameSound);
+        Check_Dogchase(mouse, dog, Image, woz.vungchoduoi, b, gameSound, TileMap);
+        Check_Dogchase(mouse, dog2, Image, woz.vungchoduoi, b, gameSound, TileMap);
+        Draw_Layer2(TileMap, Image);
+        Check_Hint(mouse, woz, Image);
+        Escape(mouse, woz, Image, b, gameSound, Bag, Bag_Menu);
+        Render_Text(Image, Bag, Font);
+        graphics.presentScene();
         SDL_Delay(10);
 
     }
@@ -374,23 +406,15 @@ void GamePlay(BOOL &b, Graphics &graphics, FONT &Font, BAG &Bag_Menu){
     dog.FreeResources();
 }
 
+
 int main(int argc, char* argv[])
 {
     Graphics graphics;
     graphics.init();
-
     BOOL b;
-    b.quit = 0;
-    b.gamePlay = 0;
-    b.menu = 1;
-
     FONT Font(graphics);
-
     BAG Bag_Menu;
-
     SDL_Event event;
-
-
     while (!b.quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) b.quit = true;
@@ -398,8 +422,10 @@ int main(int argc, char* argv[])
 
         if(b.menu){
             RunMenu(b, graphics, Font, Bag_Menu);
-        }else if(b.gamePlay){
-            GamePlay(b, graphics, Font, Bag_Menu);
+        }else if(b.gamePlay1){
+            GamePlay1(b, graphics, Font, Bag_Menu);
+        }else if(b.gamePlay2){
+            GamePlay2(b, graphics, Font, Bag_Menu);
         }
 
     }

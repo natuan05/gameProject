@@ -7,7 +7,7 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
-const double INITIAL_COUNTDOWN_TIMER = 2*60*1000;
+const double INITIAL_COUNTDOWN_TIMER = 3*60*1000;
 
 const double INITIAL_SPEED = 2;
 
@@ -52,7 +52,7 @@ const int MS_PER_CAMERA = 3000;
 
 
 //DOG
-const double INITIAL_DOGSPEED= 1.3;
+const double INITIAL_DOGSPEED= 1.5;
 
 const char* DOGRUN_SPRITE_FILE = "img\\dogrun.png";
 const int DOGRUN_CLIPS[][4]={

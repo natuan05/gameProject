@@ -5,11 +5,14 @@
 #include "graphics.h"
 #include "Objects.h"
 
+
 struct BOOL{
     bool quit = 0;
-    bool gamePlay = 0;
+    bool gamePlay1 = 0;
+    bool gamePlay2 = 0;
     bool menu = 1;
     bool shop = 0;
+
 };
 
 struct IMAGE{
@@ -57,6 +60,66 @@ struct IMAGE{
 
 };
 
+vector <WALL> WallInit(const BOOL &b){
+    vector <WALL> walls;
+    walls.emplace_back(640, 416, 32, 288);
+    walls.emplace_back(1216, 64, 32, 640);
+    walls.emplace_back(640, 64, 608, 32);
+    walls.emplace_back(640, 64, 32, 256);
+    walls.emplace_back(896, 64, 32, 256);
+    walls.emplace_back(896, 288, 160, 32);
+    walls.emplace_back(832, 416, 224, 32);
+    walls.emplace_back(960, 512, 32, 192);
+    walls.emplace_back(832, 544, 160, 32);
+    walls.emplace_back(960, 416, 32, 64);
+    walls.emplace_back(288, 416, 32, 320);
+    walls.emplace_back(288, 0, 32, 320);
+    walls.emplace_back(640, 672, 608, 32);
+    walls.emplace_back(832, 608, 32, 96);
+    walls.emplace_back(832, 416, 32, 160);
+    walls.emplace_back(1088, 288, 160, 32);
+    walls.emplace_back(1088, 416, 160, 32);
+    if (b.gamePlay2){
+        walls.emplace_back(352, 32, 32, 64);
+        walls.emplace_back(416, 32, 128, 32);
+        walls.emplace_back(576, 32, 32, 192);
+        walls.emplace_back(480, 96, 32, 32);
+        walls.emplace_back(512, 128, 32, 32);
+        walls.emplace_back(416, 96, 32, 128);
+        walls.emplace_back(352, 128, 96, 32);
+        walls.emplace_back(480, 192, 64, 32);
+        walls.emplace_back(512, 192, 32, 64);
+        walls.emplace_back(352, 192, 32, 160);
+        walls.emplace_back(352, 288, 96, 32);
+        walls.emplace_back(416, 256, 96, 32);
+        walls.emplace_back(576, 256, 32, 64);
+        walls.emplace_back(544, 288, 32, 64);
+        walls.emplace_back(448, 320, 96, 32);
+        walls.emplace_back(320, 384, 64, 32);
+        walls.emplace_back(416, 384, 64, 32);
+        walls.emplace_back(512, 352, 32, 64);
+        walls.emplace_back(512, 384, 96, 32);
+        walls.emplace_back(576, 384, 32, 128);
+        walls.emplace_back(416, 448, 64, 32);
+        walls.emplace_back(448, 448, 32, 96);
+        walls.emplace_back(320, 480, 64, 32);
+        walls.emplace_back(352, 544, 32, 128);
+        walls.emplace_back(416, 544, 32, 32);
+        walls.emplace_back(416, 608, 128, 32);
+        walls.emplace_back(512, 576, 32, 64);
+        walls.emplace_back(576, 544, 32, 128);
+        walls.emplace_back(512, 448, 32, 96);
+        walls.emplace_back(448, 608, 32, 96);
+        walls.emplace_back(512, 672, 32, 64);
+        walls.emplace_back(512, 704, 64, 32);
+        walls.emplace_back(352, 704, 64, 32);
+    }
+
+    // Return the constructed vector
+    return walls;
+
+}
+
 struct SPRITE_CHARACTER{
     Sprite Run;
     Sprite Slow;
@@ -89,7 +152,24 @@ struct SPRITE_CHARACTER{
     }
 };
 
-struct DOG{
+struct Node {
+    int x, y;
+    double gCost, hCost, fCost;
+    Node* parent;
+
+    Node() : x(0), y(0), gCost(0), hCost(0), fCost(0), parent(nullptr) {}
+
+
+    Node(int x, int y, double gCost = 0, double hCost = 0, Node* parent = nullptr)
+        : x(x), y(y), gCost(gCost), hCost(hCost), parent(parent) {
+        fCost = gCost + hCost;
+    }
+
+    bool operator>(const Node& other) const {
+        return fCost > other.fCost;
+    }
+};
+struct DOG {
     double x = 322;
     double y = 465;
     int w = 48;
@@ -103,6 +183,9 @@ struct DOG{
 
     Sprite DogRun;
 
+    vector<Node> path;
+    size_t pathIndex = 0;
+
     DOG(IMAGE &Image) {
         Init(Image);
     }
@@ -111,9 +194,11 @@ struct DOG{
         DogRun.init(Image.DogRuns, DOGRUN_FRAMES, DOGRUN_CLIPS);
     }
 
-    void FreeResources(){
+    void FreeResources() {
         DogRun.free();
     }
+
+    vector<Node> findPath(int startX, int startY, int goalX, int goalY, const vector<vector<int>>& grid);
 };
 
 
@@ -124,6 +209,8 @@ struct TILEMAP{
     vector<vector<int>> OI1CP;
     vector<vector<int>> OI2;
     vector<vector<int>> OI2CP;
+    vector<vector<int>> mapdog;
+
 
     vector<vector<int>> BackGround;
     vector<vector<int>> Layer2;
@@ -134,21 +221,31 @@ struct TILEMAP{
     Uint32 prevTicksForCam = SDL_GetTicks();
     bool cn = 1;
 
-    TILEMAP(Graphics &graphics) : graphics(graphics) {
-        init();
+    TILEMAP(Graphics &graphics, BOOL &b) : graphics(graphics) {
+        init(b);
     }
 
-    void init() {
-        tilesetImage = graphics.loadTexture("Map\\tilemap.png");
-        OI1 = LoadTileMapFromCSV("Map\\gameDemo2_Objects.csv");
-        OI2 = LoadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
-        OI1CP = OI1;
-        OI2CP = OI2;
-        BackGround = LoadTileMapFromCSV("Map\\gameDemo2_BackGround.csv");
-        Camera1 = LoadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
-        Camera2 = LoadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
-        CameraNow = Camera1;
-        Layer2 = LoadTileMapFromCSV("Map\\gameDemo2_Layer2.csv");
+    void init(const BOOL &b) {
+
+            tilesetImage = graphics.loadTexture("Map\\tilemap.png");
+            if (b.gamePlay2){
+                OI1 = LoadTileMapFromCSV("Map2\\gameDemo2_Objects.csv");
+            }else{
+                OI1 = LoadTileMapFromCSV("Map\\gameDemo2_Objects.csv");
+            }
+
+            OI2 = LoadTileMapFromCSV("Map\\gameDemo2_Objects2.csv");
+
+            OI1CP = OI1;
+            OI2CP = OI2;
+            BackGround = LoadTileMapFromCSV("Map\\gameDemo2_BackGround.csv");
+            Camera1 = LoadTileMapFromCSV("Map\\gameDemo2_Cam1.csv");
+            Camera2 = LoadTileMapFromCSV("Map\\gameDemo2_Cam2.csv");
+            CameraNow = Camera1;
+            Layer2 = LoadTileMapFromCSV("Map\\gameDemo2_Layer2.csv");
+
+            mapdog = ConvertTileMapToBinary(OI1);
+
     }
 
     void freeResources() {
@@ -159,6 +256,8 @@ struct TILEMAP{
     }
 
 };
+
+
 
 void IMAGE ::FreeResources() {
     if (SleepDog != nullptr) {
@@ -261,12 +360,12 @@ struct WALL_OBJECTS_ZONE{
     ZONE Road;
 
 
-    WALL_OBJECTS_ZONE(Graphics &graphics): graphics(graphics) {
-        Init();
+    WALL_OBJECTS_ZONE(Graphics &graphics, const BOOL &b): graphics(graphics) {
+        Init(b);
     }
 
-    void Init() {
-        walls = WallInit();
+    void Init(const BOOL &b) {
+        walls = WallInit(b);
         objects = ObjectsInit();
         camerascan = CamScanInit();
         vungchelap = VCLInit();
@@ -278,15 +377,15 @@ struct WALL_OBJECTS_ZONE{
 };
 
 struct BUTTONS{
-    ZONE Bshop;
+    ZONE Bmap2;
     ZONE Bmap;
 
     BUTTONS(){
         ZONE M("Mapbutton", 156, 126, 320, 110);
-        ZONE S("Shopbutton", 156, 500, 320, 110);
+        ZONE S("Shopbutton", 156, 310, 320, 110);
 
         Bmap = M;
-        Bshop = S;
+        Bmap2 = S;
     }
 
 };
@@ -411,6 +510,7 @@ struct Car {
     }
 
 };
+
 
 
 #endif // MENU_H_INCLUDED

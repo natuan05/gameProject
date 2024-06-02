@@ -94,27 +94,120 @@ void Mouse::UpdateDxDy(){
     }
 }
 
-void updateDogPosition(Mouse &mouse, DOG &dog) {
-    double distance = sqrt(pow(mouse.x - dog.x, 2) + pow(mouse.y - dog.y, 2));
+vector<Node> DOG::findPath(int startX, int startY, int goalX, int goalY, const vector<vector<int>>& grid) {
+    if (grid[goalY][goalX] == 1) {
+        for (int dy = -1; dy <= 1; ++dy) {
+            for (int dx = -1; dx <= 1; ++dx) {
+                int newX = goalX + dx;
+                int newY = goalY + dy;
 
-    if (distance > dog.speed) {
-        dog.dx= (mouse.x - dog.x ) / distance;
-        dog.dy = (mouse.y - dog.y ) / distance;
+                if (newX >= 0 && newX < grid[0].size() && newY >= 0 && newY < grid.size() && grid[newY][newX] == 0) {
+                    goalX = newX;
+                    goalY = newY;
+                    break;
+                }
+            }
+        }
+    }
+    priority_queue<Node, vector<Node>, greater<Node>> openList;
+    unordered_map<int, Node> openSet;
+    unordered_map<int, Node> closedSet;
 
-        if (dog.dx > 0){
-            dog.right = 1;
-        }else if (dog.dx < 0){
-            dog.right = 0;
+    auto hash = [](int x, int y) { return (x * 10000 + y); };
+
+    auto heuristic = [](int x1, int y1, int x2, int y2) {
+        return abs(x1 - x2) + abs(y1 - y2);
+    };
+
+    openList.emplace(startX, startY, 0, heuristic(startX, startY, goalX, goalY));
+    openSet[hash(startX, startY)] = openList.top();
+
+    vector<int> dx = {1, -1, 0, 0, 1, 1, -1, -1};
+    vector<int> dy = {0, 0, 1, -1, 1, -1, 1, -1};
+
+    while (!openList.empty()) {
+        Node current = openList.top();
+        openList.pop();
+        int currentHash = hash(current.x, current.y);
+        openSet.erase(currentHash);
+        closedSet[currentHash] = current;
+
+        if (current.x == goalX && current.y == goalY) {
+            vector<Node> path;
+            while (current.parent != nullptr) {
+                path.push_back(current);
+                current = *current.parent;
+            }
+            reverse(path.begin(), path.end());
+            return path;
         }
 
-        dog.x += dog.dx * dog.speed;
-        dog.y += dog.dy * dog.speed;
+        for (size_t i = 0; i < dx.size(); ++i) {
+            int newX = current.x + dx[i];
+            int newY = current.y + dy[i];
+            int newHash = hash(newX, newY);
 
-    } else {
-        dog.x = mouse.x;
-        dog.y = mouse.y;
+            if (newX < 0 || newY < 0 || newX >= grid[0].size() || newY >= grid.size() || grid[newY][newX] == 1 || closedSet.count(newHash))
+                continue;
+
+            double moveCost = (i < 4) ? 1.0 : sqrt(2.0);
+            double newGCost = current.gCost + moveCost;
+            double newHCost = heuristic(newX, newY, goalX, goalY);
+            Node neighbor(newX, newY, newGCost, newHCost, new Node(current));
+
+            if (!openSet.count(newHash) || newGCost < openSet[newHash].gCost) {
+                openList.push(neighbor);
+                openSet[newHash] = neighbor;
+            }
+        }
+    }
+
+    return vector<Node>();
+}
+
+void updateDogPosition(Mouse &mouse, DOG &dog, const vector<vector<int>>& grid) {
+    static int lastMouseX = -1;
+    static int lastMouseY = -1;
+
+    int gridMouseX = mouse.x / TILE_WIDTH ;
+    int gridMouseY = mouse.y / TILE_HEIGHT ;
+    int gridDogX = dog.x / TILE_WIDTH;
+    int gridDogY = dog.y / TILE_HEIGHT;
+
+    if (gridMouseX != lastMouseX || gridMouseY != lastMouseY || dog.path.empty() || dog.pathIndex >= dog.path.size()) {
+        dog.path = dog.findPath(gridDogX, gridDogY, gridMouseX, gridMouseY, grid);
+        dog.pathIndex = 0;
+
+        lastMouseX = gridMouseX;
+        lastMouseY = gridMouseY;
+    }
+
+    if (!dog.path.empty() && dog.pathIndex < dog.path.size()) {
+        Node nextNode = dog.path[dog.pathIndex];
+        double nextX = nextNode.x * TILE_WIDTH;
+        double nextY = nextNode.y * TILE_HEIGHT;
+
+        double distance = sqrt(pow(nextX - dog.x, 2) + pow(nextY - dog.y, 2));
+        if (distance > dog.speed) {
+            dog.dx = (nextX - dog.x) / distance;
+            dog.dy = (nextY - dog.y) / distance;
+
+            if (dog.dx > 0) {
+                dog.right = 1;
+            } else if (dog.dx < 0) {
+                dog.right = 0;
+            }
+
+            dog.x += dog.dx * dog.speed;
+            dog.y += dog.dy * dog.speed;
+        } else {
+            dog.x = nextX;
+            dog.y = nextY;
+            dog.pathIndex++;
+        }
     }
 }
+
 void Busted_Out(IMAGE &Image, BOOL &b, SOUND &gameSound){
     Image.graphics.renderTexture(Image.Busted, 0, 0);
     Image.graphics.presentScene();
@@ -129,7 +222,8 @@ void Busted_Out(IMAGE &Image, BOOL &b, SOUND &gameSound){
 
     SDL_Delay(3000);
 
-    b.gamePlay = 0;
+    b.gamePlay1 = 0;
+    b.gamePlay2 = 0;
     b.menu = 1;
 }
 
@@ -152,7 +246,7 @@ void CheckBorder (Mouse &mouse){
 //Kiem tra va cham ngoai
 int Collision1(const Mouse &mouse, const WALL &wall){
     if (mouse.x + 32 > wall.x && mouse.x + 32 < wall.x + 5 && mouse.y + 32 > wall.y && mouse.y + 32 < wall.y + wall.h) return 1;
-    if (mouse.x < wall.x + wall.w && mouse.x > wall.x +wall.w -5 && mouse.y + 32 > wall.y && mouse.y + 32< wall.y + wall.h) return 2;
+    if (mouse.x < wall.x + wall.w && mouse.x > wall.x +wall.w -5 && mouse.y + 32 > wall.y && mouse.y + 32 < wall.y + wall.h) return 2;
     if (mouse.x + 32> wall.x && mouse.x< wall.x + wall.w && mouse.y + 32 > wall.y && mouse.y +32 < wall.y + 5) return 3;
     if (mouse.x + 32> wall.x && mouse.x< wall.x + wall.w && mouse.y + 32 < wall.y + wall.h && mouse.y + 32 > wall.y + wall.h - 5) return 4;
     return 0;

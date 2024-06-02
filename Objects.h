@@ -2,7 +2,6 @@
 #define OBJECTS_H
 
 #include "def.h"
-
 using namespace std;
 
 struct WALL{
@@ -68,28 +67,6 @@ struct ZONE{
 
 };
 
-vector <WALL> WallInit(){
-    vector <WALL> walls;
-    walls.emplace_back(640, 416, 32, 288);
-    walls.emplace_back(1216, 64, 32, 640);
-    walls.emplace_back(640, 64, 608, 32);
-    walls.emplace_back(640, 64, 32, 256);
-    walls.emplace_back(896, 64, 32, 256);
-    walls.emplace_back(896, 288, 160, 32);
-    walls.emplace_back(832, 416, 224, 32);
-    walls.emplace_back(960, 512, 32, 192);
-    walls.emplace_back(832, 544, 160, 32);
-    walls.emplace_back(960, 416, 32, 64);
-    walls.emplace_back(288, 416, 32, 320);
-    walls.emplace_back(288, 0, 32, 320);
-    walls.emplace_back(640, 672, 608, 32);
-    walls.emplace_back(832, 608, 32, 96);
-    walls.emplace_back(832, 416, 32, 160);
-    walls.emplace_back(1088, 288, 160, 32);
-    walls.emplace_back(1088, 416, 160, 32);
-    return walls;
-
-}
 
 vector<OBJECTS> ObjectsInit(){
     vector<OBJECTS> ob;

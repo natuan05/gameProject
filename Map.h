@@ -30,8 +30,17 @@ vector<vector<int>> LoadTileMapFromCSV(const string& filePath) {
         cerr << "Khong the mo file: " << filePath << endl;
     }
 }
+vector<vector<int>> ConvertTileMapToBinary(const vector<vector<int>>& tileMap) {
+    vector<vector<int>> binaryMap(tileMap.size(), vector<int>(tileMap[0].size(), 0));
 
+    for (int i = 0; i < tileMap.size(); ++i) {
+        for (int j = 0; j < tileMap[i].size(); ++j) {
+            binaryMap[i][j] = (tileMap[i][j] != -1) ? 1 : 0;
+        }
+    }
 
+    return binaryMap;
+}
 
 
 
