@@ -9,10 +9,9 @@ ngồi: shift
 nhặt đồ/ vào xe/ tương tác: E
 đặt đồ về chỗ cũ: R
 
-Theo sự đối chiếu với barem điểm và một số game ví dụ:
-Ngưỡng điểm em tự đánh giá: 9đ
+Theo sự đối chiếu với barem điểm và một số game ví dụ. Ngưỡng điểm em tự đánh giá: 9đ
 
-- Game tự viết có đồ hoạ đơn giản, ý tưởng sáng tạo một game mới không sao chép, đầy đủ nội dung tính năng hấp dẫn
+-> Game tự viết có đồ hoạ đơn giản, ý tưởng sáng tạo một game mới không sao chép, đầy đủ nội dung tính năng hấp dẫn
 - Game xây dựng map/ hình ảnh từ Tilemap
 - Hiển thị hình ảnh theo các lớp hợp lí, có sự che phủ 
 - Âm thanh, hiệu ứng âm thanh phù hợp với các sự kiện trong game
